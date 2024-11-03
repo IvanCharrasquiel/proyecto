@@ -15,5 +15,7 @@ namespace DB
         public int IdCategoria { get; set; }
         public string categoria { get; set; }
 
+        public virtual ICollection<Servicio> Servicios { get; set; }
+
     }
 }

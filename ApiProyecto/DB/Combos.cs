@@ -17,5 +17,8 @@ namespace DB
         public string Descripcion { get; set; }
         public DateTime FechaInicio { get; set; }
         public int DuracionTotal { get; set; }
+
+        // Relación de muchos a muchos con Servicio a través de ComboServicio
+        public virtual ICollection<ComboServicio> ComboServicios { get; set; }
     }
 }

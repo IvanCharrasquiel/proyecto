@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DB
 {
@@ -13,14 +9,32 @@ namespace DB
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdServicio { get; set; }
-        public string servicio { get; set; }
+
+        [Required]
+        [StringLength(100)]
+        public string NombreServicio { get; set; }  // Cambiado a PascalCase
+
+        [StringLength(255)]
         public string Descripcion { get; set; }
-        public float precio { get; set; }
-        public int minutos { get; set; }
 
+        [Range(0, double.MaxValue)]  // Asegurando que el precio sea no negativo
+        public float Precio { get; set; }  // Cambiado a PascalCase
 
-        [ForeignKey("IdCategoria")]
+        [Range(0, int.MaxValue)]  // Asegurando que los minutos sean no negativos
+        public int Minutos { get; set; }  // Cambiado a PascalCase
+
+        // Relación con Categoria
         public int IdCategoria { get; set; }
-        
+        [ForeignKey("IdCategoria")]
+        public virtual Categoria Categoria { get; set; }  // Propiedad de navegación
+
+        public virtual ICollection<Promocion> Promociones { get; set; }
+
+        // Relación de muchos a muchos
+        public virtual ICollection<CitaServicio> CitaServicios { get; set; } = new List<CitaServicio>();
+
+        // Relación de muchos a muchos con Servicio a través de ComboServicio
+        public virtual ICollection<ComboServicio> ComboServicios { get; set; }
+
     }
 }

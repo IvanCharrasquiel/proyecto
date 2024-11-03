@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations.Schema;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DB
 {
@@ -13,29 +9,43 @@ namespace DB
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdPago { get; set; }
+
         public float Monto { get; set; }
         public DateTime FechaPago { get; set; }
 
-
-        [ForeignKey("IdEstado")]
+        // Relación con Estado
         public int IdEstado { get; set; }
+        [ForeignKey("IdEstado")]
+        public virtual Estado Estado { get; set; }
 
-        [ForeignKey("IdFactura")]
+        // Relación con Factura
         public int IdFactura { get; set; }
+        [ForeignKey("IdFactura")]
+        public virtual Factura Factura { get; set; }
 
-        [ForeignKey("IdCita")]
+        // Relación con Cita
         public int IdCita { get; set; }
+        [ForeignKey("IdCita")]
+        public virtual Cita Cita { get; set; }
 
-        [ForeignKey("IdCliente")]
+        // Relación con Cliente
         public int IdCliente { get; set; }
+        [ForeignKey("IdCliente")]
+        public virtual Cliente Cliente { get; set; }
 
-        [ForeignKey("IdPersona")]
+        // Relación con Persona del Cliente
         public int IdPersonaCliente { get; set; }
+        [ForeignKey("IdPersonaCliente")]
+        public virtual Persona PersonaCliente { get; set; }
 
-        [ForeignKey("IdEmpleado")]
+        // Relación con Empleado
         public int IdEmpleado { get; set; }
+        [ForeignKey("IdEmpleado")]
+        public virtual Empleado Empleado { get; set; }
 
-        [ForeignKey("IdPersona")]
+        // Relación con Persona del Empleado
         public int IdPersonaEmpleado { get; set; }
+        [ForeignKey("IdPersonaEmpleado")]
+        public virtual Persona PersonaEmpleado { get; set; }
     }
 }

@@ -15,6 +15,9 @@ namespace DB
         public int IdEmpleado { get; set; }
         public int Comision { get; set; }
         public DateTime FechaContrato { get; set; }
+
+        public virtual ICollection<Cita> Citas { get; set; }
+        public virtual ICollection<Factura> Facturas { get; set; }
+        public virtual ICollection<Pago> Pagos { get; set; }
     }
-    
 }
