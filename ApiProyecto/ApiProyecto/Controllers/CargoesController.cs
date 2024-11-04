@@ -11,47 +11,47 @@ namespace ApiProyecto.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class CargoesController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ClientesController(AppDbContext context)
+        public CargoesController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Clientes
+        // GET: api/Cargoes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cliente>>> GetCliente()
+        public async Task<ActionResult<IEnumerable<Cargo>>> GetCargo()
         {
-            return await _context.Cliente.ToListAsync();
+            return await _context.Cargo.ToListAsync();
         }
 
-        // GET: api/Clientes/5
+        // GET: api/Cargoes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> GetCliente(int id)
+        public async Task<ActionResult<Cargo>> GetCargo(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
+            var cargo = await _context.Cargo.FindAsync(id);
 
-            if (cliente == null)
+            if (cargo == null)
             {
                 return NotFound();
             }
 
-            return cliente;
+            return cargo;
         }
 
-        // PUT: api/Clientes/5
+        // PUT: api/Cargoes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        public async Task<IActionResult> PutCargo(int id, Cargo cargo)
         {
-            if (id != cliente.IdCliente)
+            if (id != cargo.IdCargo)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cliente).State = EntityState.Modified;
+            _context.Entry(cargo).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace ApiProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClienteExists(id))
+                if (!CargoExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace ApiProyecto.Controllers
             return NoContent();
         }
 
-        // POST: api/Clientes
+        // POST: api/Cargoes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
+        public async Task<ActionResult<Cargo>> PostCargo(Cargo cargo)
         {
-            _context.Cliente.Add(cliente);
+            _context.Cargo.Add(cargo);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCliente", new { id = cliente.IdCliente }, cliente);
+            return CreatedAtAction("GetCargo", new { id = cargo.IdCargo }, cargo);
         }
 
-        // DELETE: api/Clientes/5
+        // DELETE: api/Cargoes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(int id)
+        public async Task<IActionResult> DeleteCargo(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente == null)
+            var cargo = await _context.Cargo.FindAsync(id);
+            if (cargo == null)
             {
                 return NotFound();
             }
 
-            _context.Cliente.Remove(cliente);
+            _context.Cargo.Remove(cargo);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ClienteExists(int id)
+        private bool CargoExists(int id)
         {
-            return _context.Cliente.Any(e => e.IdCliente == id);
+            return _context.Cargo.Any(e => e.IdCargo == id);
         }
     }
 }

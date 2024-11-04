@@ -11,7 +11,7 @@ namespace DB
     public class Combo
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdCombo { get; set; }
 
         public double? Precio { get; set; }
@@ -29,6 +29,6 @@ namespace DB
 
         public int? IdPromocion { get; set; }
 
-        public virtual Promocion Promocion { get; set; }
+       
     }
 }

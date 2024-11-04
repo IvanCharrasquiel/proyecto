@@ -8,7 +8,7 @@ namespace DB
         // Clave primaria independiente
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int Id { get; set; }
+        
 
         // Llaves foráneas para la relación de muchos a muchos entre Combo y Servicio
         public int IdCombo { get; set; }

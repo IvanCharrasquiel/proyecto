@@ -13,7 +13,7 @@ namespace DB
       
         public Categoria()
         {
-            Servicio = new HashSet<Servicio>();
+           
         }
 
         [Key]
@@ -24,8 +24,6 @@ namespace DB
         [StringLength(50)]
         public string Categoria1 { get; set; }
 
-        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
-        public virtual ICollection<Servicio> Servicio { get; set; }
 
     }
 }

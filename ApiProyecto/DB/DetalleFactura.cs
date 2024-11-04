@@ -11,7 +11,7 @@ namespace DB
     public class DetalleFactura
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdDetalleFactura { get; set; }
 
         public int? Cantidad { get; set; }
@@ -21,16 +21,6 @@ namespace DB
         public double? Subtotal { get; set; }
 
         public int? IdFactura { get; set; }
-
-        public int? IdCita { get; set; }
-
-        public int? IdCliente { get; set; }
-
-        public int? IdPersonaCliente { get; set; }
-
-        public int? IdEmpleado { get; set; }
-
-        public int? IdPersonaEmpleado { get; set; }
 
         public int? IdServicio { get; set; }
     }

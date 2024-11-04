@@ -11,47 +11,47 @@ namespace ApiProyecto.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class FacturasController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ClientesController(AppDbContext context)
+        public FacturasController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Clientes
+        // GET: api/Facturas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cliente>>> GetCliente()
+        public async Task<ActionResult<IEnumerable<Factura>>> GetFactura()
         {
-            return await _context.Cliente.ToListAsync();
+            return await _context.Factura.ToListAsync();
         }
 
-        // GET: api/Clientes/5
+        // GET: api/Facturas/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> GetCliente(int id)
+        public async Task<ActionResult<Factura>> GetFactura(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
+            var factura = await _context.Factura.FindAsync(id);
 
-            if (cliente == null)
+            if (factura == null)
             {
                 return NotFound();
             }
 
-            return cliente;
+            return factura;
         }
 
-        // PUT: api/Clientes/5
+        // PUT: api/Facturas/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        public async Task<IActionResult> PutFactura(int id, Factura factura)
         {
-            if (id != cliente.IdCliente)
+            if (id != factura.IdFactura)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cliente).State = EntityState.Modified;
+            _context.Entry(factura).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace ApiProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClienteExists(id))
+                if (!FacturaExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace ApiProyecto.Controllers
             return NoContent();
         }
 
-        // POST: api/Clientes
+        // POST: api/Facturas
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
+        public async Task<ActionResult<Factura>> PostFactura(Factura factura)
         {
-            _context.Cliente.Add(cliente);
+            _context.Factura.Add(factura);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCliente", new { id = cliente.IdCliente }, cliente);
+            return CreatedAtAction("GetFactura", new { id = factura.IdFactura }, factura);
         }
 
-        // DELETE: api/Clientes/5
+        // DELETE: api/Facturas/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(int id)
+        public async Task<IActionResult> DeleteFactura(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente == null)
+            var factura = await _context.Factura.FindAsync(id);
+            if (factura == null)
             {
                 return NotFound();
             }
 
-            _context.Cliente.Remove(cliente);
+            _context.Factura.Remove(factura);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ClienteExists(int id)
+        private bool FacturaExists(int id)
         {
-            return _context.Cliente.Any(e => e.IdCliente == id);
+            return _context.Factura.Any(e => e.IdFactura == id);
         }
     }
 }

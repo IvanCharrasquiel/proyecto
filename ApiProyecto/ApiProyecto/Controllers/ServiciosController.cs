@@ -11,47 +11,47 @@ namespace ApiProyecto.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class ServiciosController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ClientesController(AppDbContext context)
+        public ServiciosController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Clientes
+        // GET: api/Servicios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cliente>>> GetCliente()
+        public async Task<ActionResult<IEnumerable<Servicio>>> GetServicio()
         {
-            return await _context.Cliente.ToListAsync();
+            return await _context.Servicio.ToListAsync();
         }
 
-        // GET: api/Clientes/5
+        // GET: api/Servicios/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> GetCliente(int id)
+        public async Task<ActionResult<Servicio>> GetServicio(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
+            var servicio = await _context.Servicio.FindAsync(id);
 
-            if (cliente == null)
+            if (servicio == null)
             {
                 return NotFound();
             }
 
-            return cliente;
+            return servicio;
         }
 
-        // PUT: api/Clientes/5
+        // PUT: api/Servicios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        public async Task<IActionResult> PutServicio(int id, Servicio servicio)
         {
-            if (id != cliente.IdCliente)
+            if (id != servicio.IdServicio)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cliente).State = EntityState.Modified;
+            _context.Entry(servicio).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace ApiProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClienteExists(id))
+                if (!ServicioExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace ApiProyecto.Controllers
             return NoContent();
         }
 
-        // POST: api/Clientes
+        // POST: api/Servicios
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
+        public async Task<ActionResult<Servicio>> PostServicio(Servicio servicio)
         {
-            _context.Cliente.Add(cliente);
+            _context.Servicio.Add(servicio);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCliente", new { id = cliente.IdCliente }, cliente);
+            return CreatedAtAction("GetServicio", new { id = servicio.IdServicio }, servicio);
         }
 
-        // DELETE: api/Clientes/5
+        // DELETE: api/Servicios/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(int id)
+        public async Task<IActionResult> DeleteServicio(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente == null)
+            var servicio = await _context.Servicio.FindAsync(id);
+            if (servicio == null)
             {
                 return NotFound();
             }
 
-            _context.Cliente.Remove(cliente);
+            _context.Servicio.Remove(servicio);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ClienteExists(int id)
+        private bool ServicioExists(int id)
         {
-            return _context.Cliente.Any(e => e.IdCliente == id);
+            return _context.Servicio.Any(e => e.IdServicio == id);
         }
     }
 }

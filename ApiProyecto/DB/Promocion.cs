@@ -24,9 +24,6 @@ namespace DB
         [StringLength(50)]
         public string Estado { get; set; }  
 
-        // Relación con Estado
-        public int IdEstado { get; set; }
-        [ForeignKey("IdEstado")]
-        public virtual Estado EstadoPromocion { get; set; }  
+        
     }
 }

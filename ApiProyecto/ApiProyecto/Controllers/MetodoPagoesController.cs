@@ -11,47 +11,47 @@ namespace ApiProyecto.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class MetodoPagoesController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ClientesController(AppDbContext context)
+        public MetodoPagoesController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Clientes
+        // GET: api/MetodoPagoes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cliente>>> GetCliente()
+        public async Task<ActionResult<IEnumerable<MetodoPago>>> GetMetodoPagos()
         {
-            return await _context.Cliente.ToListAsync();
+            return await _context.MetodoPagos.ToListAsync();
         }
 
-        // GET: api/Clientes/5
+        // GET: api/MetodoPagoes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> GetCliente(int id)
+        public async Task<ActionResult<MetodoPago>> GetMetodoPago(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
+            var metodoPago = await _context.MetodoPagos.FindAsync(id);
 
-            if (cliente == null)
+            if (metodoPago == null)
             {
                 return NotFound();
             }
 
-            return cliente;
+            return metodoPago;
         }
 
-        // PUT: api/Clientes/5
+        // PUT: api/MetodoPagoes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        public async Task<IActionResult> PutMetodoPago(int id, MetodoPago metodoPago)
         {
-            if (id != cliente.IdCliente)
+            if (id != metodoPago.IdMetodoPago)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cliente).State = EntityState.Modified;
+            _context.Entry(metodoPago).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace ApiProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClienteExists(id))
+                if (!MetodoPagoExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace ApiProyecto.Controllers
             return NoContent();
         }
 
-        // POST: api/Clientes
+        // POST: api/MetodoPagoes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
+        public async Task<ActionResult<MetodoPago>> PostMetodoPago(MetodoPago metodoPago)
         {
-            _context.Cliente.Add(cliente);
+            _context.MetodoPagos.Add(metodoPago);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCliente", new { id = cliente.IdCliente }, cliente);
+            return CreatedAtAction("GetMetodoPago", new { id = metodoPago.IdMetodoPago }, metodoPago);
         }
 
-        // DELETE: api/Clientes/5
+        // DELETE: api/MetodoPagoes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(int id)
+        public async Task<IActionResult> DeleteMetodoPago(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente == null)
+            var metodoPago = await _context.MetodoPagos.FindAsync(id);
+            if (metodoPago == null)
             {
                 return NotFound();
             }
 
-            _context.Cliente.Remove(cliente);
+            _context.MetodoPagos.Remove(metodoPago);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ClienteExists(int id)
+        private bool MetodoPagoExists(int id)
         {
-            return _context.Cliente.Any(e => e.IdCliente == id);
+            return _context.MetodoPagos.Any(e => e.IdMetodoPago == id);
         }
     }
 }

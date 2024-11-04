@@ -22,7 +22,7 @@ namespace ApiProyecto.Controllers
 
         // GET: api/Personas
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Persona>>> GetOPersona()
+        public async Task<ActionResult<IEnumerable<Persona>>> GetPersona()
         {
             return await _context.Persona.ToListAsync();
         }
@@ -78,21 +78,7 @@ namespace ApiProyecto.Controllers
         public async Task<ActionResult<Persona>> PostPersona(Persona persona)
         {
             _context.Persona.Add(persona);
-            try
-            {
-                await _context.SaveChangesAsync();
-            }
-            catch (DbUpdateException)
-            {
-                if (PersonaExists(persona.idPersona))
-                {
-                    return Conflict();
-                }
-                else
-                {
-                    throw;
-                }
-            }
+            await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPersona", new { id = persona.idPersona }, persona);
         }

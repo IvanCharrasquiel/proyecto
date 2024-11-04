@@ -20,8 +20,6 @@ namespace DB
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdCargo { get; set; }
 
-        public int? Id { get; set; }
-
         [Column("Cargo")]
         [StringLength(50)]
         public string Cargo1 { get; set; }

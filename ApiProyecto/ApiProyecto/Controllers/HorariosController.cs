@@ -11,47 +11,47 @@ namespace ApiProyecto.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class HorariosController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ClientesController(AppDbContext context)
+        public HorariosController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Clientes
+        // GET: api/Horarios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cliente>>> GetCliente()
+        public async Task<ActionResult<IEnumerable<Horario>>> GetHorario()
         {
-            return await _context.Cliente.ToListAsync();
+            return await _context.Horario.ToListAsync();
         }
 
-        // GET: api/Clientes/5
+        // GET: api/Horarios/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> GetCliente(int id)
+        public async Task<ActionResult<Horario>> GetHorario(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
+            var horario = await _context.Horario.FindAsync(id);
 
-            if (cliente == null)
+            if (horario == null)
             {
                 return NotFound();
             }
 
-            return cliente;
+            return horario;
         }
 
-        // PUT: api/Clientes/5
+        // PUT: api/Horarios/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        public async Task<IActionResult> PutHorario(int id, Horario horario)
         {
-            if (id != cliente.IdCliente)
+            if (id != horario.IdHorario)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cliente).State = EntityState.Modified;
+            _context.Entry(horario).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace ApiProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClienteExists(id))
+                if (!HorarioExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace ApiProyecto.Controllers
             return NoContent();
         }
 
-        // POST: api/Clientes
+        // POST: api/Horarios
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
+        public async Task<ActionResult<Horario>> PostHorario(Horario horario)
         {
-            _context.Cliente.Add(cliente);
+            _context.Horario.Add(horario);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCliente", new { id = cliente.IdCliente }, cliente);
+            return CreatedAtAction("GetHorario", new { id = horario.IdHorario }, horario);
         }
 
-        // DELETE: api/Clientes/5
+        // DELETE: api/Horarios/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(int id)
+        public async Task<IActionResult> DeleteHorario(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente == null)
+            var horario = await _context.Horario.FindAsync(id);
+            if (horario == null)
             {
                 return NotFound();
             }
 
-            _context.Cliente.Remove(cliente);
+            _context.Horario.Remove(horario);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ClienteExists(int id)
+        private bool HorarioExists(int id)
         {
-            return _context.Cliente.Any(e => e.IdCliente == id);
+            return _context.Horario.Any(e => e.IdHorario == id);
         }
     }
 }

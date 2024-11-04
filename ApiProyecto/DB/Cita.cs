@@ -17,31 +17,19 @@ namespace DB
         }
 
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.None)]
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdCita { get; set; }
 
         public int? IdCliente { get; set; }
 
-        public int? IdPersonaCliente { get; set; }
-
         public int? IdEmpleado { get; set; }
-
-        public int? IdPersonaEmpleado { get; set; }
 
         [Column(TypeName = "date")]
         public DateTime? Fecha { get; set; }
 
         public int? IdHorario { get; set; }
 
-        public virtual Cliente Cliente { get; set; }
-
-        public virtual Empleado Empleado { get; set; }
-
-        public virtual Horario Horario { get; set; }
-
-        public virtual Persona Persona { get; set; }
-
-        public virtual Persona Persona1 { get; set; }
+        
 
         
     }

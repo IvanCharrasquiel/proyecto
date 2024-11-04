@@ -11,47 +11,47 @@ namespace ApiProyecto.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class ClientesController : ControllerBase
+    public class PagoesController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public ClientesController(AppDbContext context)
+        public PagoesController(AppDbContext context)
         {
             _context = context;
         }
 
-        // GET: api/Clientes
+        // GET: api/Pagoes
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Cliente>>> GetCliente()
+        public async Task<ActionResult<IEnumerable<Pago>>> GetPagos()
         {
-            return await _context.Cliente.ToListAsync();
+            return await _context.Pagos.ToListAsync();
         }
 
-        // GET: api/Clientes/5
+        // GET: api/Pagoes/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Cliente>> GetCliente(int id)
+        public async Task<ActionResult<Pago>> GetPago(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
+            var pago = await _context.Pagos.FindAsync(id);
 
-            if (cliente == null)
+            if (pago == null)
             {
                 return NotFound();
             }
 
-            return cliente;
+            return pago;
         }
 
-        // PUT: api/Clientes/5
+        // PUT: api/Pagoes/5
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCliente(int id, Cliente cliente)
+        public async Task<IActionResult> PutPago(int id, Pago pago)
         {
-            if (id != cliente.IdCliente)
+            if (id != pago.IdPago)
             {
                 return BadRequest();
             }
 
-            _context.Entry(cliente).State = EntityState.Modified;
+            _context.Entry(pago).State = EntityState.Modified;
 
             try
             {
@@ -59,7 +59,7 @@ namespace ApiProyecto.Controllers
             }
             catch (DbUpdateConcurrencyException)
             {
-                if (!ClienteExists(id))
+                if (!PagoExists(id))
                 {
                     return NotFound();
                 }
@@ -72,36 +72,36 @@ namespace ApiProyecto.Controllers
             return NoContent();
         }
 
-        // POST: api/Clientes
+        // POST: api/Pagoes
         // To protect from overposting attacks, see https://go.microsoft.com/fwlink/?linkid=2123754
         [HttpPost]
-        public async Task<ActionResult<Cliente>> PostCliente(Cliente cliente)
+        public async Task<ActionResult<Pago>> PostPago(Pago pago)
         {
-            _context.Cliente.Add(cliente);
+            _context.Pagos.Add(pago);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCliente", new { id = cliente.IdCliente }, cliente);
+            return CreatedAtAction("GetPago", new { id = pago.IdPago }, pago);
         }
 
-        // DELETE: api/Clientes/5
+        // DELETE: api/Pagoes/5
         [HttpDelete("{id}")]
-        public async Task<IActionResult> DeleteCliente(int id)
+        public async Task<IActionResult> DeletePago(int id)
         {
-            var cliente = await _context.Cliente.FindAsync(id);
-            if (cliente == null)
+            var pago = await _context.Pagos.FindAsync(id);
+            if (pago == null)
             {
                 return NotFound();
             }
 
-            _context.Cliente.Remove(cliente);
+            _context.Pagos.Remove(pago);
             await _context.SaveChangesAsync();
 
             return NoContent();
         }
 
-        private bool ClienteExists(int id)
+        private bool PagoExists(int id)
         {
-            return _context.Cliente.Any(e => e.IdCliente == id);
+            return _context.Pagos.Any(e => e.IdPago == id);
         }
     }
 }

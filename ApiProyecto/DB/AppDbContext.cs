@@ -19,7 +19,12 @@ namespace DB
         public virtual DbSet<Persona> Persona { get; set; }
         public virtual DbSet<Promocion> Promocion { get; set; }
         public virtual DbSet<Servicio> Servicio { get; set; }
-        public virtual DbSet<ComboServicio> ComboServicio { get; set; }
+        public virtual DbSet<CitaServicio> CitaServicio { get; set; }
+        public virtual DbSet<ComboServicio> ComboServicios { get; set; }
+        public virtual DbSet<MetodoPago> MetodoPagos { get; set; }
+        public virtual DbSet<Pago> Pagos { get; set; }
+
+
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {

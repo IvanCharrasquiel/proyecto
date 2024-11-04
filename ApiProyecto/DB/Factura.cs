@@ -28,11 +28,9 @@ namespace DB
 
         public int? IdCliente { get; set; }
 
-        public int? IdPersonaCliente { get; set; }
-
         public int? IdEmpleado { get; set; }
 
-        public int? IdPersonaEmpleado { get; set; }
+       
 
     }
 }
