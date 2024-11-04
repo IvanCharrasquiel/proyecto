@@ -6,20 +6,32 @@ namespace DB
 {
     public class Persona
     {
+
+        public Persona()
+        {
+            
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int IdPersona { get; set; }
+        public int idPersona { get; set; }
 
-        public int Cedula { get; set; } 
+        public int? Cedula { get; set; }
+
+        [StringLength(50)]
         public string Nombre { get; set; }
+
+        [StringLength(50)]
         public string Apellido { get; set; }
-        public int Telefono { get; set; } 
+
+        public int? Telefono { get; set; }
+
+        [StringLength(50)]
         public string Email { get; set; }
+
+        [StringLength(50)]
         public string Direccion { get; set; }
 
-        // Relación con Sexo
-        public int IdSexo { get; set; }
-        [ForeignKey("IdSexo")]
-        public virtual Sexo Sexo { get; set; }
+        
     }
 }

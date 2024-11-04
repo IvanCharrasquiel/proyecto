@@ -10,40 +10,29 @@ namespace DB
 {
     public class Factura
     {
+        public Factura()
+        {
+            
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdFactura { get; set; }
 
-        public DateTime FechaComision { get; set; }
-        public float MontoTotal { get; set; }
+        [Column(TypeName = "date")]
+        public DateTime? FechaEmision { get; set; }
 
-        // Relación con Cita
-        public int IdCita { get; set; }
-        [ForeignKey("IdCita")]
-        public virtual Cita Cita { get; set; }
+        public double? Monto { get; set; }
 
-        // Relación con Cliente
-        public int IdCliente { get; set; }
-        [ForeignKey("IdCliente")]
-        public virtual Cliente Cliente { get; set; }
+        public int? IdCita { get; set; }
 
-        // Relación con Persona del Cliente
-        public int IdPersonaCliente { get; set; }
-        [ForeignKey("IdPersonaCliente")]
-        public virtual Persona PersonaCliente { get; set; }
+        public int? IdCliente { get; set; }
 
-        // Relación con Empleado
-        public int IdEmpleado { get; set; }
-        [ForeignKey("IdEmpleado")]
-        public virtual Empleado Empleado { get; set; }
+        public int? IdPersonaCliente { get; set; }
 
-        // Relación con Persona del Empleado
-        public int IdPersonaEmpleado { get; set; }
-        [ForeignKey("IdPersonaEmpleado")]
-        public virtual Persona PersonaEmpleado { get; set; }
+        public int? IdEmpleado { get; set; }
 
-
-        public virtual ICollection<DetalleFactura> Detalles { get; set; }
+        public int? IdPersonaEmpleado { get; set; }
 
     }
 }

@@ -10,12 +10,22 @@ namespace DB
 {
     public class Categoria
     {
+      
+        public Categoria()
+        {
+            Servicio = new HashSet<Servicio>();
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdCategoria { get; set; }
-        public string categoria { get; set; }
 
-        public virtual ICollection<Servicio> Servicios { get; set; }
+        [Column("Categoria")]
+        [StringLength(50)]
+        public string Categoria1 { get; set; }
+
+        [System.Diagnostics.CodeAnalysis.SuppressMessage("Microsoft.Usage", "CA2227:CollectionPropertiesShouldBeReadOnly")]
+        public virtual ICollection<Servicio> Servicio { get; set; }
 
     }
 }

@@ -11,50 +11,27 @@ namespace DB
     public class DetalleFactura
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int IdDetalleFactura { get; set; }
 
-        public float PrecioUnidad { get; set; }
-        public float Subtotal { get; set; }
+        public int? Cantidad { get; set; }
 
-        // Relación con Factura
-        public int IdFactura { get; set; }
-        [ForeignKey("IdFactura")]
-        public virtual Factura Factura { get; set; }
+        public double? PrecioUnitario { get; set; }
 
-        // Relación con Cita
-        public int IdCita { get; set; }
-        [ForeignKey("IdCita")]
-        public virtual Cita Cita { get; set; }
+        public double? Subtotal { get; set; }
 
-        // Relación con Cliente
-        public int IdCliente { get; set; }
-        [ForeignKey("IdCliente")]
-        public virtual Cliente Cliente { get; set; }
+        public int? IdFactura { get; set; }
 
-        // Relación con Persona del Cliente
-        public int IdPersonaCliente { get; set; }
-        [ForeignKey("IdPersonaCliente")]
-        public virtual Persona PersonaCliente { get; set; }
+        public int? IdCita { get; set; }
 
-        // Relación con Empleado
-        public int IdEmpleado { get; set; }
-        [ForeignKey("IdEmpleado")]
-        public virtual Empleado Empleado { get; set; }
+        public int? IdCliente { get; set; }
 
-        // Relación con Persona del Empleado
-        public int IdPersonaEmpleado { get; set; }
-        [ForeignKey("IdPersonaEmpleado")]
-        public virtual Persona PersonaEmpleado { get; set; }
+        public int? IdPersonaCliente { get; set; }
 
-        // Relación con Servicio
-        public int IdServicio { get; set; }
-        [ForeignKey("IdServicio")]
-        public virtual Servicio Servicio { get; set; }
+        public int? IdEmpleado { get; set; }
 
-        // Relación con Categoria de Servicio
-        public int IdCategoria { get; set; }
-        [ForeignKey("IdCategoria")]
-        public virtual Categoria Categoria { get; set; }
+        public int? IdPersonaEmpleado { get; set; }
+
+        public int? IdServicio { get; set; }
     }
 }

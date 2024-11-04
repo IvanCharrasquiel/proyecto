@@ -10,12 +10,25 @@ namespace DB
 {
     public class Horario
     {
+        public Horario()
+        {
+            
+        }
+
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdHorario { get; set; }
-        public DateTime Dia { get; set; }
-        public DateTime HoraInicio { get; set; }
-        public DateTime HoraFin { get; set; }
+
+        [StringLength(50)]
+        public string Dia { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? HoraInicio { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? HoraFin { get; set; }
+
         
+
     }
 }

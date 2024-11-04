@@ -1,9 +1,14 @@
-﻿using Microsoft.EntityFrameworkCore;
-namespace DB
+using System;
+using System.ComponentModel.DataAnnotations.Schema;
+using System.Data.Entity;
+using System.Linq;
+
+namespace entity
 {
-    public class AppDbContext : DbContext
+    public partial class Model1 : DbContext
     {
-        public AppDbContext(DbContextOptions options) : base(options)
+        public Model1()
+            : base("name=Model1")
         {
         }
 
@@ -19,9 +24,8 @@ namespace DB
         public virtual DbSet<Persona> Persona { get; set; }
         public virtual DbSet<Promocion> Promocion { get; set; }
         public virtual DbSet<Servicio> Servicio { get; set; }
-        public virtual DbSet<ComboServicio> ComboServicio { get; set; }
 
-        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        protected override void OnModelCreating(DbModelBuilder modelBuilder)
         {
             modelBuilder.Entity<Cargo>()
                 .Property(e => e.Cargo1)
@@ -55,6 +59,46 @@ namespace DB
                 .Property(e => e.Direccion)
                 .IsUnicode(false);
 
+            modelBuilder.Entity<Persona>()
+                .HasMany(e => e.Cita)
+                .WithOptional(e => e.Persona)
+                .HasForeignKey(e => e.IdPersonaCliente);
+
+            modelBuilder.Entity<Persona>()
+                .HasMany(e => e.Cita1)
+                .WithOptional(e => e.Persona1)
+                .HasForeignKey(e => e.IdPersonaEmpleado);
+
+            modelBuilder.Entity<Persona>()
+                .HasMany(e => e.Cliente)
+                .WithOptional(e => e.Persona)
+                .HasForeignKey(e => e.id_Persona);
+
+            modelBuilder.Entity<Persona>()
+                .HasMany(e => e.DetalleFactura)
+                .WithOptional(e => e.Persona)
+                .HasForeignKey(e => e.IdPersonaCliente);
+
+            modelBuilder.Entity<Persona>()
+                .HasMany(e => e.DetalleFactura1)
+                .WithOptional(e => e.Persona1)
+                .HasForeignKey(e => e.IdPersonaEmpleado);
+
+            modelBuilder.Entity<Persona>()
+                .HasMany(e => e.Empleado)
+                .WithOptional(e => e.Persona)
+                .HasForeignKey(e => e.IdPersonaEmpleado);
+
+            modelBuilder.Entity<Persona>()
+                .HasMany(e => e.Factura)
+                .WithOptional(e => e.Persona)
+                .HasForeignKey(e => e.IdPersonaCliente);
+
+            modelBuilder.Entity<Persona>()
+                .HasMany(e => e.Factura1)
+                .WithOptional(e => e.Persona1)
+                .HasForeignKey(e => e.IdPersonaEmpleado);
+
             modelBuilder.Entity<Promocion>()
                 .Property(e => e.Descripcion)
                 .IsUnicode(false);
@@ -71,6 +115,5 @@ namespace DB
                 .Property(e => e.Descripcion)
                 .IsUnicode(false);
         }
-
     }
 }

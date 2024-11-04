@@ -1,13 +1,16 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
-using System.ComponentModel.DataAnnotations.Schema;
-
-namespace DB
+namespace WindowsFormsApp1
 {
-    public class Servicio
+    using System;
+    using System.Collections.Generic;
+    using System.ComponentModel.DataAnnotations;
+    using System.ComponentModel.DataAnnotations.Schema;
+    using System.Data.Entity.Spatial;
+
+    [Table("Servicio")]
+    public partial class Servicio
     {
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int IdServicio { get; set; }
 
         [Column("Servicio")]
@@ -22,6 +25,5 @@ namespace DB
         public int? Minutos { get; set; }
 
         public int? IdCategoria { get; set; }
-
     }
 }

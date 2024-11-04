@@ -10,50 +10,40 @@ namespace DB
 {
     public class Cita
     {
+        
+        public Cita()
+        {
+            
+        }
+
         [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
+        [DatabaseGenerated(DatabaseGeneratedOption.None)]
         public int IdCita { get; set; }
 
-        // Relación con Cliente
-        public int IdCliente { get; set; }
-        [ForeignKey("IdCliente")]
+        public int? IdCliente { get; set; }
+
+        public int? IdPersonaCliente { get; set; }
+
+        public int? IdEmpleado { get; set; }
+
+        public int? IdPersonaEmpleado { get; set; }
+
+        [Column(TypeName = "date")]
+        public DateTime? Fecha { get; set; }
+
+        public int? IdHorario { get; set; }
+
         public virtual Cliente Cliente { get; set; }
 
-        // Relación con Persona para el cliente
-        public int IdPersonaCliente { get; set; }
-        [ForeignKey("IdPersonaCliente")]
-        public virtual Persona PersonaCliente { get; set; }
-
-        // Relación con Empleado
-        public int IdEmpleado { get; set; }
-        [ForeignKey("IdEmpleado")]
         public virtual Empleado Empleado { get; set; }
 
-        // Relación con Persona para el empleado
-        public int IdPersonaEmpleado { get; set; }
-        [ForeignKey("IdPersonaEmpleado")]
-        public virtual Persona PersonaEmpleado { get; set; }
-
-        // Relación con Estado de la Cita
-        public int IdEstado { get; set; }
-        [ForeignKey("IdEstado")]
-        public virtual Estado Estado { get; set; }
-
-        // Relación con Horario
-        public int IdHorario { get; set; }
-        [ForeignKey("IdHorario")]
         public virtual Horario Horario { get; set; }
 
-        // Relación con Sexo
-        public int IdSexo { get; set; }
-        [ForeignKey("IdSexo")]
-        public virtual Sexo Sexo { get; set; }
+        public virtual Persona Persona { get; set; }
 
-        public virtual ICollection<DetalleFactura> DetallesFactura { get; set; }
-        public virtual ICollection<Pago> Pagos { get; set; }
+        public virtual Persona Persona1 { get; set; }
 
-        // Relación de muchos a muchos
-        public virtual ICollection<CitaServicio> CitaServicios { get; set; } = new List<CitaServicio>();
+        
     }
 
 }

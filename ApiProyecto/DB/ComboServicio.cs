@@ -16,7 +16,7 @@ namespace DB
 
         // Navegación para Combo
         [ForeignKey("IdCombo")]
-        public virtual Combos Combo { get; set; }
+        public virtual Combo Combo { get; set; }
 
         // Navegación para Servicio
         [ForeignKey("IdServicio")]

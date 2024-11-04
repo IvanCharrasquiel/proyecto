@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="utf-8"?>
+<edmx:Edmx Version="3.0" xmlns:edmx="http://schemas.microsoft.com/ado/2009/11/edmx">
+ <!-- EF Designer content (DO NOT EDIT MANUALLY BELOW HERE) -->
+  <edmx:Designer xmlns="http://schemas.microsoft.com/ado/2009/11/edmx">
+    <!-- Diagram content (shape and connector positions) -->
+    <edmx:Diagrams>
+      <Diagram DiagramId="722492f79ea2457db5a63843eeb367f8" Name="Diagram1">
+        <EntityTypeShape EntityType="ProyectoModel.Cargo" Width="1.5" PointX="0.75" PointY="4.625" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Categoria" Width="1.5" PointX="3" PointY="16.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Cita" Width="1.5" PointX="5.25" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Cliente" Width="1.5" PointX="3" PointY="12.75" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Combo" Width="1.5" PointX="8.125" PointY="4.25" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.DetalleFactura" Width="1.5" PointX="7.5" PointY="9.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Empleado" Width="1.5" PointX="3" PointY="8" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Factura" Width="1.5" PointX="10.5" PointY="9.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Horario" Width="1.5" PointX="3" PointY="4.375" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Persona" Width="1.5" PointX="0.75" PointY="7.5" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Promocion" Width="1.5" PointX="6.625" PointY="3.125" IsExpanded="true" />
+        <EntityTypeShape EntityType="ProyectoModel.Servicio" Width="1.5" PointX="5.25" PointY="16" IsExpanded="true" />
+        <AssociationConnector Association="ProyectoModel.FK_Empleado_Cargo" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Servicio_Categoria" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Cita_Cliente" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Cita_Empleado" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Cita_Horario" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Cita_Persona" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Cita_Persona1" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_DetalleFactura_Cita" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Factura_Cita" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Cliente_Persona" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_DetalleFactura_Cliente" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Factura_Cliente" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Combo_Promocion" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_DetalleFactura_Empleado" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_DetalleFactura_Factura" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_DetalleFactura_PersonaCliente" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_DetalleFactura_PersonaEmpleado" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_DetalleFactura_Servicio" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Empleado_Persona" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Factura_Empleado" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Factura_PersonaCliente" ManuallyRouted="false" />
+        <AssociationConnector Association="ProyectoModel.FK_Factura_PersonaEmpleado" ManuallyRouted="false" />
+      </Diagram>
+    </edmx:Diagrams>
+  </edmx:Designer>
+</edmx:Edmx>

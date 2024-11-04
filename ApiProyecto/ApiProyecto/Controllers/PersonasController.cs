@@ -24,14 +24,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Persona>>> GetOPersona()
         {
-            return await _context.OPersona.ToListAsync();
+            return await _context.Persona.ToListAsync();
         }
 
         // GET: api/Personas/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Persona>> GetPersona(int id)
         {
-            var persona = await _context.OPersona.FindAsync(id);
+            var persona = await _context.Persona.FindAsync(id);
 
             if (persona == null)
             {
@@ -46,7 +46,7 @@ namespace ApiProyecto.Controllers
         [HttpPut("{id}")]
         public async Task<IActionResult> PutPersona(int id, Persona persona)
         {
-            if (id != persona.IdPersona)
+            if (id != persona.idPersona)
             {
                 return BadRequest();
             }
@@ -77,23 +77,37 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<Persona>> PostPersona(Persona persona)
         {
-            _context.OPersona.Add(persona);
-            await _context.SaveChangesAsync();
+            _context.Persona.Add(persona);
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateException)
+            {
+                if (PersonaExists(persona.idPersona))
+                {
+                    return Conflict();
+                }
+                else
+                {
+                    throw;
+                }
+            }
 
-            return CreatedAtAction("GetPersona", new { id = persona.IdPersona }, persona);
+            return CreatedAtAction("GetPersona", new { id = persona.idPersona }, persona);
         }
 
         // DELETE: api/Personas/5
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePersona(int id)
         {
-            var persona = await _context.OPersona.FindAsync(id);
+            var persona = await _context.Persona.FindAsync(id);
             if (persona == null)
             {
                 return NotFound();
             }
 
-            _context.OPersona.Remove(persona);
+            _context.Persona.Remove(persona);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +115,7 @@ namespace ApiProyecto.Controllers
 
         private bool PersonaExists(int id)
         {
-            return _context.OPersona.Any(e => e.IdPersona == id);
+            return _context.Persona.Any(e => e.idPersona == id);
         }
     }
 }

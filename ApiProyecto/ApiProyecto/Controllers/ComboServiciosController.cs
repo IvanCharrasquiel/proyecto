@@ -22,16 +22,16 @@ namespace ApiProyecto.Controllers
 
         // GET: api/ComboServicios
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<ComboServicio>>> GetOComboServicio()
+        public async Task<ActionResult<IEnumerable<ComboServicio>>> GetComboServicio()
         {
-            return await _context.OComboServicio.ToListAsync();
+            return await _context.ComboServicio.ToListAsync();
         }
 
         // GET: api/ComboServicios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<ComboServicio>> GetComboServicio(int id)
         {
-            var comboServicio = await _context.OComboServicio.FindAsync(id);
+            var comboServicio = await _context.ComboServicio.FindAsync(id);
 
             if (comboServicio == null)
             {
@@ -77,7 +77,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<ComboServicio>> PostComboServicio(ComboServicio comboServicio)
         {
-            _context.OComboServicio.Add(comboServicio);
+            _context.ComboServicio.Add(comboServicio);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetComboServicio", new { id = comboServicio.Id }, comboServicio);
@@ -87,13 +87,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteComboServicio(int id)
         {
-            var comboServicio = await _context.OComboServicio.FindAsync(id);
+            var comboServicio = await _context.ComboServicio.FindAsync(id);
             if (comboServicio == null)
             {
                 return NotFound();
             }
 
-            _context.OComboServicio.Remove(comboServicio);
+            _context.ComboServicio.Remove(comboServicio);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +101,7 @@ namespace ApiProyecto.Controllers
 
         private bool ComboServicioExists(int id)
         {
-            return _context.OComboServicio.Any(e => e.Id == id);
+            return _context.ComboServicio.Any(e => e.Id == id);
         }
     }
 }
