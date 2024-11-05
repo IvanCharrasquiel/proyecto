@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DB;
 
 namespace ApiProyecto.Controllers
 {
@@ -24,14 +19,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Combo>>> GetCombo()
         {
-            return await _context.Combo.ToListAsync();
+            return await _context.Combos.ToListAsync();
         }
 
         // GET: api/Comboes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Combo>> GetCombo(int id)
         {
-            var combo = await _context.Combo.FindAsync(id);
+            var combo = await _context.Combos.FindAsync(id);
 
             if (combo == null)
             {
@@ -77,7 +72,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<Combo>> PostCombo(Combo combo)
         {
-            _context.Combo.Add(combo);
+            _context.Combos.Add(combo);
             try
             {
                 await _context.SaveChangesAsync();
@@ -101,13 +96,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCombo(int id)
         {
-            var combo = await _context.Combo.FindAsync(id);
+            var combo = await _context.Combos.FindAsync(id);
             if (combo == null)
             {
                 return NotFound();
             }
 
-            _context.Combo.Remove(combo);
+            _context.Combos.Remove(combo);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -115,7 +110,7 @@ namespace ApiProyecto.Controllers
 
         private bool ComboExists(int id)
         {
-            return _context.Combo.Any(e => e.IdCombo == id);
+            return _context.Combos.Any(e => e.IdCombo == id);
         }
     }
 }

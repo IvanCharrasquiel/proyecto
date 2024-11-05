@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DB;
 
 namespace ApiProyecto.Controllers
 {
@@ -24,14 +19,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Promocion>>> GetPromocion()
         {
-            return await _context.Promocion.ToListAsync();
+            return await _context.Promocions.ToListAsync();
         }
 
         // GET: api/Promocions/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Promocion>> GetPromocion(int id)
         {
-            var promocion = await _context.Promocion.FindAsync(id);
+            var promocion = await _context.Promocions.FindAsync(id);
 
             if (promocion == null)
             {
@@ -77,7 +72,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<Promocion>> PostPromocion(Promocion promocion)
         {
-            _context.Promocion.Add(promocion);
+            _context.Promocions.Add(promocion);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetPromocion", new { id = promocion.IdPromocion }, promocion);
@@ -87,13 +82,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeletePromocion(int id)
         {
-            var promocion = await _context.Promocion.FindAsync(id);
+            var promocion = await _context.Promocions.FindAsync(id);
             if (promocion == null)
             {
                 return NotFound();
             }
 
-            _context.Promocion.Remove(promocion);
+            _context.Promocions.Remove(promocion);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +96,7 @@ namespace ApiProyecto.Controllers
 
         private bool PromocionExists(int id)
         {
-            return _context.Promocion.Any(e => e.IdPromocion == id);
+            return _context.Promocions.Any(e => e.IdPromocion == id);
         }
     }
 }

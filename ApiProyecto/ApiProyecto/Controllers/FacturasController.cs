@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DB;
 
 namespace ApiProyecto.Controllers
 {
@@ -24,14 +19,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Factura>>> GetFactura()
         {
-            return await _context.Factura.ToListAsync();
+            return await _context.Facturas.ToListAsync();
         }
 
         // GET: api/Facturas/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Factura>> GetFactura(int id)
         {
-            var factura = await _context.Factura.FindAsync(id);
+            var factura = await _context.Facturas.FindAsync(id);
 
             if (factura == null)
             {
@@ -77,7 +72,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<Factura>> PostFactura(Factura factura)
         {
-            _context.Factura.Add(factura);
+            _context.Facturas.Add(factura);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetFactura", new { id = factura.IdFactura }, factura);
@@ -87,13 +82,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteFactura(int id)
         {
-            var factura = await _context.Factura.FindAsync(id);
+            var factura = await _context.Facturas.FindAsync(id);
             if (factura == null)
             {
                 return NotFound();
             }
 
-            _context.Factura.Remove(factura);
+            _context.Facturas.Remove(factura);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +96,7 @@ namespace ApiProyecto.Controllers
 
         private bool FacturaExists(int id)
         {
-            return _context.Factura.Any(e => e.IdFactura == id);
+            return _context.Facturas.Any(e => e.IdFactura == id);
         }
     }
 }

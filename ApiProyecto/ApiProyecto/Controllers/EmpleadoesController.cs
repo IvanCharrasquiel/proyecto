@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DB;
 
 namespace ApiProyecto.Controllers
 {
@@ -24,14 +19,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Empleado>>> GetEmpleado()
         {
-            return await _context.Empleado.ToListAsync();
+            return await _context.Empleados.ToListAsync();
         }
 
         // GET: api/Empleadoes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Empleado>> GetEmpleado(int id)
         {
-            var empleado = await _context.Empleado.FindAsync(id);
+            var empleado = await _context.Empleados.FindAsync(id);
 
             if (empleado == null)
             {
@@ -77,7 +72,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<Empleado>> PostEmpleado(Empleado empleado)
         {
-            _context.Empleado.Add(empleado);
+            _context.Empleados.Add(empleado);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetEmpleado", new { id = empleado.IdEmpleado }, empleado);
@@ -87,13 +82,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteEmpleado(int id)
         {
-            var empleado = await _context.Empleado.FindAsync(id);
+            var empleado = await _context.Empleados.FindAsync(id);
             if (empleado == null)
             {
                 return NotFound();
             }
 
-            _context.Empleado.Remove(empleado);
+            _context.Empleados.Remove(empleado);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +96,7 @@ namespace ApiProyecto.Controllers
 
         private bool EmpleadoExists(int id)
         {
-            return _context.Empleado.Any(e => e.IdEmpleado == id);
+            return _context.Empleados.Any(e => e.IdEmpleado == id);
         }
     }
 }

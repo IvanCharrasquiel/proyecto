@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DB
 {
@@ -29,6 +24,7 @@ namespace DB
 
         public int? IdPromocion { get; set; }
 
-       
+        public virtual Promocion IdPromocionNavigation { get; set; } = null!;
+
     }
 }

@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DB
@@ -18,12 +17,12 @@ namespace DB
         public DateTime FechaFinal { get; set; }
 
         [Range(0, 100)]
-        public decimal Descuento { get; set; } 
+        public double Descuento { get; set; }
 
         [Required]
         [StringLength(50)]
-        public string Estado { get; set; }  
+        public string Estado { get; set; }
 
-        
+        public virtual ICollection<Combo> Combos { get; set; } = new List<Combo>();
     }
 }

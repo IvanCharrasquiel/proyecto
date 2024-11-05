@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DB;
 
 namespace ApiProyecto.Controllers
 {
@@ -24,14 +19,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Horario>>> GetHorario()
         {
-            return await _context.Horario.ToListAsync();
+            return await _context.Horarios.ToListAsync();
         }
 
         // GET: api/Horarios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Horario>> GetHorario(int id)
         {
-            var horario = await _context.Horario.FindAsync(id);
+            var horario = await _context.Horarios.FindAsync(id);
 
             if (horario == null)
             {
@@ -77,7 +72,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<Horario>> PostHorario(Horario horario)
         {
-            _context.Horario.Add(horario);
+            _context.Horarios.Add(horario);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetHorario", new { id = horario.IdHorario }, horario);
@@ -87,13 +82,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteHorario(int id)
         {
-            var horario = await _context.Horario.FindAsync(id);
+            var horario = await _context.Horarios.FindAsync(id);
             if (horario == null)
             {
                 return NotFound();
             }
 
-            _context.Horario.Remove(horario);
+            _context.Horarios.Remove(horario);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +96,7 @@ namespace ApiProyecto.Controllers
 
         private bool HorarioExists(int id)
         {
-            return _context.Horario.Any(e => e.IdHorario == id);
+            return _context.Horarios.Any(e => e.IdHorario == id);
         }
     }
 }

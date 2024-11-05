@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DB;
 
 namespace ApiProyecto.Controllers
 {
@@ -24,14 +19,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Cargo>>> GetCargo()
         {
-            return await _context.Cargo.ToListAsync();
+            return await _context.Cargos.ToListAsync();
         }
 
         // GET: api/Cargoes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Cargo>> GetCargo(int id)
         {
-            var cargo = await _context.Cargo.FindAsync(id);
+            var cargo = await _context.Cargos.FindAsync(id);
 
             if (cargo == null)
             {
@@ -77,7 +72,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<Cargo>> PostCargo(Cargo cargo)
         {
-            _context.Cargo.Add(cargo);
+            _context.Cargos.Add(cargo);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetCargo", new { id = cargo.IdCargo }, cargo);
@@ -87,13 +82,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteCargo(int id)
         {
-            var cargo = await _context.Cargo.FindAsync(id);
+            var cargo = await _context.Cargos.FindAsync(id);
             if (cargo == null)
             {
                 return NotFound();
             }
 
-            _context.Cargo.Remove(cargo);
+            _context.Cargos.Remove(cargo);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +96,7 @@ namespace ApiProyecto.Controllers
 
         private bool CargoExists(int id)
         {
-            return _context.Cargo.Any(e => e.IdCargo == id);
+            return _context.Cargos.Any(e => e.IdCargo == id);
         }
     }
 }

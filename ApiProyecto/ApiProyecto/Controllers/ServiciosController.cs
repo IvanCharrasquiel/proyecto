@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DB;
 
 namespace ApiProyecto.Controllers
 {
@@ -24,14 +19,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Servicio>>> GetServicio()
         {
-            return await _context.Servicio.ToListAsync();
+            return await _context.Servicios.ToListAsync();
         }
 
         // GET: api/Servicios/5
         [HttpGet("{id}")]
         public async Task<ActionResult<Servicio>> GetServicio(int id)
         {
-            var servicio = await _context.Servicio.FindAsync(id);
+            var servicio = await _context.Servicios.FindAsync(id);
 
             if (servicio == null)
             {
@@ -77,7 +72,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<Servicio>> PostServicio(Servicio servicio)
         {
-            _context.Servicio.Add(servicio);
+            _context.Servicios.Add(servicio);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetServicio", new { id = servicio.IdServicio }, servicio);
@@ -87,13 +82,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteServicio(int id)
         {
-            var servicio = await _context.Servicio.FindAsync(id);
+            var servicio = await _context.Servicios.FindAsync(id);
             if (servicio == null)
             {
                 return NotFound();
             }
 
-            _context.Servicio.Remove(servicio);
+            _context.Servicios.Remove(servicio);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +96,7 @@ namespace ApiProyecto.Controllers
 
         private bool ServicioExists(int id)
         {
-            return _context.Servicio.Any(e => e.IdServicio == id);
+            return _context.Servicios.Any(e => e.IdServicio == id);
         }
     }
 }

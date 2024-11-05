@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DB;
 
 namespace ApiProyecto.Controllers
 {
@@ -24,14 +19,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<MetodoPago>>> GetMetodoPagos()
         {
-            return await _context.MetodoPagos.ToListAsync();
+            return await _context.MetodoPago.ToListAsync();
         }
 
         // GET: api/MetodoPagoes/5
         [HttpGet("{id}")]
         public async Task<ActionResult<MetodoPago>> GetMetodoPago(int id)
         {
-            var metodoPago = await _context.MetodoPagos.FindAsync(id);
+            var metodoPago = await _context.MetodoPago.FindAsync(id);
 
             if (metodoPago == null)
             {
@@ -77,7 +72,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<MetodoPago>> PostMetodoPago(MetodoPago metodoPago)
         {
-            _context.MetodoPagos.Add(metodoPago);
+            _context.MetodoPago.Add(metodoPago);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction("GetMetodoPago", new { id = metodoPago.IdMetodoPago }, metodoPago);
@@ -87,13 +82,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteMetodoPago(int id)
         {
-            var metodoPago = await _context.MetodoPagos.FindAsync(id);
+            var metodoPago = await _context.MetodoPago.FindAsync(id);
             if (metodoPago == null)
             {
                 return NotFound();
             }
 
-            _context.MetodoPagos.Remove(metodoPago);
+            _context.MetodoPago.Remove(metodoPago);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -101,7 +96,7 @@ namespace ApiProyecto.Controllers
 
         private bool MetodoPagoExists(int id)
         {
-            return _context.MetodoPagos.Any(e => e.IdMetodoPago == id);
+            return _context.MetodoPago.Any(e => e.IdMetodoPago == id);
         }
     }
 }

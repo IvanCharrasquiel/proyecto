@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
+﻿using DB;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using DB;
 
 namespace ApiProyecto.Controllers
 {
@@ -24,14 +19,14 @@ namespace ApiProyecto.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<DetalleFactura>>> GetDetalleFactura()
         {
-            return await _context.DetalleFactura.ToListAsync();
+            return await _context.DetalleFacturas.ToListAsync();
         }
 
         // GET: api/DetalleFacturas/5
         [HttpGet("{id}")]
         public async Task<ActionResult<DetalleFactura>> GetDetalleFactura(int id)
         {
-            var detalleFactura = await _context.DetalleFactura.FindAsync(id);
+            var detalleFactura = await _context.DetalleFacturas.FindAsync(id);
 
             if (detalleFactura == null)
             {
@@ -77,7 +72,7 @@ namespace ApiProyecto.Controllers
         [HttpPost]
         public async Task<ActionResult<DetalleFactura>> PostDetalleFactura(DetalleFactura detalleFactura)
         {
-            _context.DetalleFactura.Add(detalleFactura);
+            _context.DetalleFacturas.Add(detalleFactura);
             try
             {
                 await _context.SaveChangesAsync();
@@ -101,13 +96,13 @@ namespace ApiProyecto.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteDetalleFactura(int id)
         {
-            var detalleFactura = await _context.DetalleFactura.FindAsync(id);
+            var detalleFactura = await _context.DetalleFacturas.FindAsync(id);
             if (detalleFactura == null)
             {
                 return NotFound();
             }
 
-            _context.DetalleFactura.Remove(detalleFactura);
+            _context.DetalleFacturas.Remove(detalleFactura);
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -115,7 +110,7 @@ namespace ApiProyecto.Controllers
 
         private bool DetalleFacturaExists(int id)
         {
-            return _context.DetalleFactura.Any(e => e.IdDetalleFactura == id);
+            return _context.DetalleFacturas.Any(e => e.IdDetalleFactura == id);
         }
     }
 }

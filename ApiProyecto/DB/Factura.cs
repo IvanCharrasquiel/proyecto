@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DB
 {
@@ -12,7 +7,7 @@ namespace DB
     {
         public Factura()
         {
-            
+
         }
 
         [Key]
@@ -22,15 +17,13 @@ namespace DB
         [Column(TypeName = "date")]
         public DateTime? FechaEmision { get; set; }
 
-        public double? Monto { get; set; }
+        public decimal? MontoTotal { get; set; }
 
         public int? IdCita { get; set; }
 
-        public int? IdCliente { get; set; }
+        public virtual ICollection<DetalleFactura> DetalleFacturas { get; set; } = new List<DetalleFactura>();
 
-        public int? IdEmpleado { get; set; }
-
-       
+        public virtual Cita? IdCitaNavigation { get; set; }
 
     }
 }

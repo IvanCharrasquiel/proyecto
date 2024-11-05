@@ -1,10 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DB
 {
@@ -12,7 +7,7 @@ namespace DB
     {
         public Horario()
         {
-            
+
         }
 
         [Key]
@@ -22,13 +17,13 @@ namespace DB
         [StringLength(50)]
         public string Dia { get; set; }
 
-        [Column(TypeName = "date")]
+        [Column(TypeName = "datetime")]
         public DateTime? HoraInicio { get; set; }
 
-        [Column(TypeName = "date")]
+        [Column(TypeName = "datetime")]
         public DateTime? HoraFin { get; set; }
 
-        
+
 
     }
 }

@@ -1,18 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DB
 {
-    public class Empleado
+    public partial class Empleado
     {
         public Empleado()
         {
-            
+
         }
 
         [Key]
@@ -28,7 +23,9 @@ namespace DB
 
         public int? IdPersonaEmpleado { get; set; }
 
+        public string? Contraseña { get; set; }
+        public virtual Cargo IdCargoNavigation { get; set; } = null!;
 
-        
+        public virtual Persona IdPersonaEmpleadoNavigation { get; set; } = null!;
     }
 }

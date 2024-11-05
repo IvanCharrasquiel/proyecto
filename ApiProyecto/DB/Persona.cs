@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DB
@@ -9,12 +8,12 @@ namespace DB
 
         public Persona()
         {
-            
+
         }
 
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int idPersona { get; set; }
+        public int IdPersona { get; set; }
 
         public int? Cedula { get; set; }
 
@@ -32,6 +31,11 @@ namespace DB
         [StringLength(50)]
         public string Direccion { get; set; }
 
-        
+        [StringLength(256)]
+
+        public string ContraseñaPersona { get; set; }
+
+        public virtual ICollection<Empleado> Empleados { get; set; } = new List<Empleado>();
+
     }
 }

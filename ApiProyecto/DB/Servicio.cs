@@ -1,5 +1,4 @@
-﻿using System;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace DB
@@ -22,6 +21,7 @@ namespace DB
         public int? Minutos { get; set; }
 
         public int? IdCategoria { get; set; }
+        public virtual Categoria IdCategoriaNavigation { get; set; } = null!;
 
     }
 }

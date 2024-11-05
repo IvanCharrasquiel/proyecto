@@ -1,19 +1,14 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DB
 {
     public class Cliente
     {
-        
+
         public Cliente()
         {
-            
+
         }
 
         [Key]
@@ -25,10 +20,10 @@ namespace DB
 
         public int? id_Persona { get; set; }
 
-        
-        
+        public string? Contraseña { get; set; }
+        public virtual ICollection<Cita> Cita { get; set; } = new List<Cita>();
     }
 
-    
+
 
 }
