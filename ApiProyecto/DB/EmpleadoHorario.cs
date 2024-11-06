@@ -2,6 +2,7 @@
 {
     public partial class EmpleadoHorario
     {
+        public int IdEmpleadoHorario { get; set; }
         public int? IdEmpleado { get; set; }
 
         public int? IdHorario { get; set; }

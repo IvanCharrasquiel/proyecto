@@ -259,7 +259,270 @@ namespace DB
             });
 
         }
+        
+        
+        //metodo en base a las clases DB
+        /*
+         * protected override void OnModelCreating(ModelBuilder modelBuilder)
+{
+    // Configuración de Cargo
+    modelBuilder.Entity<Cargo>(entity =>
+    {
+        entity.HasKey(e => e.IdCargo);
+        entity.ToTable("Cargo");
+        entity.Property(e => e.Cargo1)
+            .HasMaxLength(50)
+            .IsUnicode(false)
+            .HasColumnName("Cargo");
+    });
 
+    // Configuración de Categoria
+    modelBuilder.Entity<Categoria>(entity =>
+    {
+        entity.HasKey(e => e.IdCategoria);
+        entity.Property(e => e.Categoria1)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+    });
+
+    // Configuración de CitaServicio
+    modelBuilder.Entity<CitaServicio>(entity =>
+    {
+        entity.HasNoKey().ToTable("CitaServicio");
+        entity.HasOne(d => d.IdCitaNavigation)
+            .WithMany()
+            .HasForeignKey(d => d.IdCita)
+            .HasConstraintName("FK_CitaServicio_Cita");
+    });
+
+    // Configuración de Cita
+    modelBuilder.Entity<Cita>(entity =>
+    {
+        entity.HasKey(e => e.IdCita);
+        entity.HasOne(d => d.IdClienteNavigation)
+            .WithMany(p => p.Cita)
+            .HasForeignKey(d => d.IdCliente)
+            .HasConstraintName("FK_Cita_Cliente");
+
+        entity.HasOne(d => d.IdEmpleadoNavigation)
+            .WithMany(p => p.Cita)
+            .HasForeignKey(d => d.IdEmpleado)
+            .HasConstraintName("FK_Cita_Empleado");
+    });
+
+    // Configuración de Cliente
+    modelBuilder.Entity<Cliente>(entity =>
+    {
+        entity.HasKey(e => e.IdCliente);
+        entity.ToTable("Cliente");
+        entity.Property(e => e.Contraseña)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+    });
+
+    // Configuración de Combo
+    modelBuilder.Entity<Combo>(entity =>
+    {
+        entity.HasKey(e => e.IdCombo);
+        entity.ToTable("Combo");
+        entity.Property(e => e.Descripcion)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+
+        entity.HasOne(d => d.IdPromocionNavigation)
+            .WithMany(p => p.Combos)
+            .HasForeignKey(d => d.IdPromocion)
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("FK_Combo_Promocion");
+    });
+
+    // Configuración de ComboServicio
+    modelBuilder.Entity<ComboServicio>(entity =>
+    {
+        entity.HasNoKey().ToTable("ComboServicio");
+
+        entity.HasOne(d => d.IdComboNavigation)
+            .WithMany()
+            .HasForeignKey(d => d.IdCombo)
+            .HasConstraintName("FK_ComboServicio_Combo");
+
+        entity.HasOne(d => d.IdServicioNavigation)
+            .WithMany()
+            .HasForeignKey(d => d.IdServicio)
+            .HasConstraintName("FK_ComboServicio_Servicio");
+    });
+
+    // Configuración de DetalleFactura
+    modelBuilder.Entity<DetalleFactura>(entity =>
+    {
+        entity.HasKey(e => e.IdDetalleFactura);
+        entity.ToTable("DetalleFactura");
+        entity.Property(e => e.Subtotal)
+            .HasColumnType("decimal(18, 0)");
+
+        entity.HasOne(d => d.IdFacturaNavigation)
+            .WithMany(p => p.DetalleFacturas)
+            .HasForeignKey(d => d.IdFactura)
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("FK_DetalleFactura_Factura");
+
+        entity.HasOne(d => d.IdServicioNavigation)
+            .WithMany()
+            .HasForeignKey(d => d.IdServicio)
+            .HasConstraintName("FK_DetalleFactura_Servicio");
+    });
+
+    // Configuración de Empleado
+    modelBuilder.Entity<Empleado>(entity =>
+    {
+        entity.HasKey(e => e.IdEmpleado);
+        entity.ToTable("Empleado");
+        entity.Property(e => e.Contraseña)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+
+        entity.HasOne(d => d.IdCargoNavigation)
+            .WithMany(p => p.Empleados)
+            .HasForeignKey(d => d.IdCargo)
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("FK_Empleado_Cargo");
+
+        entity.HasOne(d => d.IdPersonaEmpleadoNavigation)
+            .WithMany(p => p.Empleados)
+            .HasForeignKey(d => d.IdPersonaEmpleado)
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("FK_Empleado_Persona");
+    });
+
+    // Configuración de EmpleadoHorario
+    modelBuilder.Entity<EmpleadoHorario>(entity =>
+    {
+        entity.HasNoKey().ToTable("EmpleadoHorario");
+
+        entity.HasOne(d => d.IdEmpleadoNavigation)
+            .WithMany()
+            .HasForeignKey(d => d.IdEmpleado)
+            .HasConstraintName("FK_EmpleadoHorario_Empleado");
+
+        entity.HasOne(d => d.IdHorarioNavigation)
+            .WithMany()
+            .HasForeignKey(d => d.IdHorario)
+            .HasConstraintName("FK_EmpleadoHorario_Horario");
+    });
+
+    // Configuración de Factura
+    modelBuilder.Entity<Factura>(entity =>
+    {
+        entity.HasKey(e => e.IdFactura);
+        entity.ToTable("Factura");
+        entity.Property(e => e.MontoTotal)
+            .HasColumnType("decimal(18, 0)");
+
+        entity.HasOne(d => d.IdCitaNavigation)
+            .WithMany(p => p.Facturas)
+            .HasForeignKey(d => d.IdCita)
+            .HasConstraintName("FK_Factura_Cita");
+    });
+
+    // Configuración de Horario
+    modelBuilder.Entity<Horario>(entity =>
+    {
+        entity.HasKey(e => e.IdHorario);
+        entity.ToTable("Horario");
+        entity.Property(e => e.Dia)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+    });
+
+    // Configuración de Persona
+    modelBuilder.Entity<Persona>(entity =>
+    {
+        entity.HasKey(e => e.IdPersona);
+        entity.ToTable("Persona");
+
+        entity.Property(e => e.Apellido)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+
+        entity.Property(e => e.Direccion)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+
+        entity.Property(e => e.Email)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+
+        entity.Property(e => e.Nombre)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+    });
+
+    // Configuración de Promocion
+    modelBuilder.Entity<Promocion>(entity =>
+    {
+        entity.HasKey(e => e.IdPromocion);
+        entity.ToTable("Promocion");
+
+        entity.Property(e => e.Descripcion)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+
+        entity.Property(e => e.Estado)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+    });
+
+    // Configuración de Servicio
+    modelBuilder.Entity<Servicio>(entity =>
+    {
+        entity.HasKey(e => e.IdServicio);
+        entity.ToTable("Servicio");
+
+        entity.Property(e => e.Descripcion)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+
+        entity.Property(e => e.Servicio1)
+            .HasMaxLength(50)
+            .IsUnicode(false)
+            .HasColumnName("Servicio");
+
+        entity.HasOne(d => d.IdCategoriaNavigation)
+            .WithMany(p => p.Servicios)
+            .HasForeignKey(d => d.IdCategoria)
+            .OnDelete(DeleteBehavior.ClientSetNull)
+            .HasConstraintName("FK_Servicio_Categoria");
+    });
+
+    // Configuración de Pago
+    modelBuilder.Entity<Pago>(entity =>
+    {
+        entity.HasKey(e => e.IdPago);
+        entity.ToTable("Pago");
+
+        entity.Property(e => e.Monto)
+            .HasColumnType("decimal(18, 0)");
+
+        entity.Property(e => e.FechaPago)
+            .HasColumnType("datetime");
+
+        entity.Property(e => e.Estado)
+            .HasMaxLength(50)
+            .IsUnicode(false);
+
+        entity.HasOne(d => d.Factura)
+            .WithMany(p => p.Pagos)
+            .HasForeignKey(d => d.IdFactura)
+            .HasConstraintName("FK_Pago_Factura");
+
+        entity.HasOne(d => d.MetodoPago)
+            .WithMany(p => p.Pagos)
+            .HasForeignKey(d => d.IdMetodoPago)
+            .HasConstraintName("FK_Pago_MetodoPago");
+    });
+}
+
+         */
 
     }
 }

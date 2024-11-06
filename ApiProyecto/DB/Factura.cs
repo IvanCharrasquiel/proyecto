@@ -5,16 +5,8 @@ namespace DB
 {
     public class Factura
     {
-        public Factura()
-        {
-
-        }
-
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdFactura { get; set; }
 
-        [Column(TypeName = "date")]
         public DateTime? FechaEmision { get; set; }
 
         public decimal? MontoTotal { get; set; }

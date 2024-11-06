@@ -7,6 +7,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ApiProyecto", "ApiProyecto\
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DB", "DB\DB.csproj", "{6BE66640-8049-4776-8DBA-BDF7EEF75CA9}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AppPeluqueria", "AppPeluqueria\AppPeluqueria.csproj", "{004E00F9-94E5-44E7-916C-E5D6B1A1CE80}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -21,6 +23,12 @@ Global
 		{6BE66640-8049-4776-8DBA-BDF7EEF75CA9}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6BE66640-8049-4776-8DBA-BDF7EEF75CA9}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6BE66640-8049-4776-8DBA-BDF7EEF75CA9}.Release|Any CPU.Build.0 = Release|Any CPU
+		{004E00F9-94E5-44E7-916C-E5D6B1A1CE80}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{004E00F9-94E5-44E7-916C-E5D6B1A1CE80}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{004E00F9-94E5-44E7-916C-E5D6B1A1CE80}.Debug|Any CPU.Deploy.0 = Debug|Any CPU
+		{004E00F9-94E5-44E7-916C-E5D6B1A1CE80}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{004E00F9-94E5-44E7-916C-E5D6B1A1CE80}.Release|Any CPU.Build.0 = Release|Any CPU
+		{004E00F9-94E5-44E7-916C-E5D6B1A1CE80}.Release|Any CPU.Deploy.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

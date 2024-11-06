@@ -12,9 +12,9 @@ namespace ApiProyecto.Controllers
     [ApiController]
     public class CitaControllerReal : ControllerBase
     {
-        private readonly ICitaServices _citaServices;
+        private readonly ICitaRepository _citaServices;
 
-        public CitaControllerReal(ICitaServices citaService)
+        public CitaControllerReal(ICitaRepository citaService)
         {
             _citaServices = citaService;
         }

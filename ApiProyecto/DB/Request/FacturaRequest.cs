@@ -40,7 +40,6 @@ namespace DB.Request
         public string Estado { get; set; }
         public  int IdFactura { get; set; }
         public int IdMetodoPago { get; set; }
-
     }
 
 

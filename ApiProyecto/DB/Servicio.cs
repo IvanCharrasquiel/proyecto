@@ -5,15 +5,10 @@ namespace DB
 {
     public class Servicio
     {
-        [Key]
-        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public int IdServicio { get; set; }
 
-        [Column("Servicio")]
-        [StringLength(50)]
         public string Servicio1 { get; set; }
 
-        [StringLength(50)]
         public string Descripcion { get; set; }
 
         public double? Precio { get; set; }
@@ -21,7 +16,14 @@ namespace DB
         public int? Minutos { get; set; }
 
         public int? IdCategoria { get; set; }
+
         public virtual Categoria IdCategoriaNavigation { get; set; } = null!;
+
+        // Relación muchos a muchos con Cita a través de CitaServicio
+        public virtual ICollection<CitaServicio> CitaServicios { get; set; } = new List<CitaServicio>();
+
+        // Relación muchos a muchos con Cita a través de ComboServicio
+        public virtual ICollection<ComboServicio> ComboServicios { get; set; } = new List<ComboServicio>();
 
     }
 }

@@ -1,4 +1,3 @@
-using ApiProyecto.Models;
 using DB;
 using DB.Services;
 using Microsoft.EntityFrameworkCore;
@@ -22,7 +21,7 @@ builder.Logging.AddConsole();
 //Inyecciones
 builder.Services.AddScoped<IUServices, UserServices>();
 builder.Services.AddScoped<IFacturaServices, FacturaServices>();
-builder.Services.AddScoped<ICitaServices, CitaServices>();
+builder.Services.AddScoped<ICitaRepository, CitaRepository>();
 
 var app = builder.Build();
 

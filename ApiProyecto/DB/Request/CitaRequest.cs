@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -8,29 +9,31 @@ namespace DB.Request
 {
     public class CitaRequest
     {
-        public CitaRequest()
-        {
-            this.lcitaservicio = new List<citaservicios>();
-            this.lfactura = new List<facturaCita>();
-        }
-        public int  IdCliente { get; set; }
+        public int IdCliente { get; set; }
         public int IdEmpleado { get; set; }
-        public int IdHorario { get; set; }
+        public int IdHorario {  get; set; }
 
-        public List<citaservicios> lcitaservicio { get; set; }
-        public List<facturaCita> lfactura { get; set; }
+        public ClienteRequest Cliente { get; set; }
+        public EmpleadoRequest Empleado { get; set; }
+        public ServicioRequest Servicio { get; set; }
+        public FacturaRequest Factura { get; set; }
+
+        public IEnumerable<citaservicio> Citas { get; set; } = Enumerable.Empty<citaservicio>();
+
     }
 
-    public class facturaCita
+    
+
+    public class citaservicio
     {
+        [Key]
+        public int IdCitaServicio { get; set; }
         public int IdCita { get; set; }
-        public int MontoTotal { get; set; }
+        public int IdServicio { get; set; }
     }
 
-    public class citaservicios
-    {
+    
 
-        
-    }
+    
 
 }
