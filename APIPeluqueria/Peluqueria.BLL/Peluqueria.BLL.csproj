@@ -1,0 +1,16 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\Peluqueria.DAL\Peluqueria.DAL.csproj" />
+    <ProjectReference Include="..\Peluqueria.DTO\Peluqueria.DTO.csproj" />
+    <ProjectReference Include="..\Peluqueria.Model\Peluqueria.Model.csproj" />
+    <ProjectReference Include="..\Peluqueria.Utility\Peluqueria.Utility.csproj" />
+  </ItemGroup>
+
+</Project>
