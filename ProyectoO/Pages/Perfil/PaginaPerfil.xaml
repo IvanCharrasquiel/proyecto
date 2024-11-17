@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Perfil.PaginaPerfil"
+             Title="Perfil">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="20">
+            <!-- Foto de Perfil -->
+            <Frame CornerRadius="75" WidthRequest="150" HeightRequest="150" HasShadow="True" HorizontalOptions="Center">
+                <Image x:Name="FotoPerfilImage" Source="default_profile.png" Aspect="AspectFill"/>
+            </Frame>
+            <Button Text="Cambiar Foto de Perfil" 
+                    Clicked="OnCambiarFotoClicked" 
+                    BackgroundColor="Purple" 
+                    TextColor="White" 
+                    CornerRadius="20"/>
+
+            <!-- Información Personal -->
+            <Entry x:Name="NombreEntry" 
+                   Placeholder="Nombre" 
+                   Text="{Binding Nombre}" 
+                   FontAttributes="Bold" 
+                   TextColor="Black"/>
+
+            <Entry x:Name="ApellidoEntry" 
+                   Placeholder="Apellido" 
+                   Text="{Binding Apellido}" 
+                   FontAttributes="Bold" 
+                   TextColor="Black"/>
+
+            <Entry x:Name="CedulaEntry" 
+                   Placeholder="Cédula" 
+                   Keyboard="Numeric" 
+                   Text="{Binding Cedula}" 
+                   FontAttributes="Bold" 
+                   TextColor="Black"/>
+
+            <Entry x:Name="TelefonoEntry" 
+                   Placeholder="Teléfono" 
+                   Keyboard="Telephone" 
+                   Text="{Binding Telefono}" 
+                   FontAttributes="Bold" 
+                   TextColor="Black"/>
+
+            <Entry x:Name="EmailEntryPerfil" 
+                   Placeholder="Email" 
+                   Keyboard="Email" 
+                   Text="{Binding Email}" 
+                   FontAttributes="Bold" 
+                   TextColor="Black" 
+                   IsEnabled="False"/>
+            <!-- Email no editable -->
+
+            <Entry x:Name="DireccionEntry" 
+                   Placeholder="Dirección" 
+                   Text="{Binding Direccion}" 
+                   FontAttributes="Bold" 
+                   TextColor="Black"/>
+
+            <Button Text="Guardar Cambios" 
+                    Clicked="OnGuardarCambiosClicked" 
+                    BackgroundColor="Green" 
+                    TextColor="White" 
+                    CornerRadius="20"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

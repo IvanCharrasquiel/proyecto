@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.PaginaReservas"
+             Title="Mis reservas"
+             BackgroundColor="White">
+    <VerticalStackLayout Padding="20" Spacing="15">
+        <Label Text="Mis reservas"
+               Margin="0,50,0,0"
+               FontSize="24"
+               FontAttributes="Bold"
+               TextColor="Black"/>
+
+        <Label Text="Selecciona el empleado"
+               FontSize="16"
+               TextColor="Gray"/>
+
+        <Picker Title="Select"
+                FontSize="16"/>
+
+        <Button Text="Siguiente"
+                BackgroundColor="purple"
+                TextColor="White"
+                CornerRadius="8"
+                HeightRequest="45"
+                HorizontalOptions="Center"/>
+    </VerticalStackLayout>
+</ContentPage>

@@ -1,0 +1,141 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Registro.Registro"
+             Title="Registro"
+             BackgroundColor="White">
+    <VerticalStackLayout Spacing="20" Padding="30" VerticalOptions="CenterAndExpand">
+
+        <!-- Título de la página -->
+        <Label Text="REGÍSTRATE YA!!!" 
+           TextColor="#333333" 
+           FontAttributes="Bold" 
+           FontSize="24" 
+           HorizontalOptions="Center"/>
+
+        <!-- Campo Cédula -->
+        <Frame CornerRadius="50" Padding="8" BackgroundColor="White" HasShadow="True">
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Image Source="cedula.png" WidthRequest="20" HeightRequest="20" Margin="0,0,8,0"/>
+                <Entry x:Name="CedulaEntry" 
+                    Placeholder="Cédula" 
+                   Keyboard="Numeric" 
+                   WidthRequest="270"
+                   HeightRequest="35"
+                   PlaceholderColor="gray"
+                   FontSize="14"
+                   TextColor="Black"/>
+            </StackLayout>
+        </Frame>
+
+        <!-- Campo Nombre -->
+        <Frame CornerRadius="50" Padding="8" BackgroundColor="White" HasShadow="True">
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Image Source="usuario.png" WidthRequest="20" HeightRequest="20" Margin="0,0,8,0"/>
+                <Entry x:Name="NombreEntry" 
+                    Placeholder="Nombre"
+                    PlaceholderColor="gray"
+                   WidthRequest="270"
+                   HeightRequest="35"
+                   FontSize="14"
+                   TextColor="Black"/>
+            </StackLayout>
+        </Frame>
+
+        <!-- Campo Apellido -->
+        <Frame CornerRadius="50" Padding="8" BackgroundColor="White" HasShadow="True">
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Image Source="familia.png" WidthRequest="20" HeightRequest="20" Margin="0,0,8,0"/>
+                <Entry x:Name="ApellidoEntry" 
+                   Placeholder="Apellido" 
+                   PlaceholderColor="gray"
+                   WidthRequest="270"
+                   HeightRequest="35"
+                   FontSize="14"
+                   TextColor="Black"/>
+            </StackLayout>
+        </Frame>
+
+        <!-- Campo Teléfono -->
+        <Frame CornerRadius="50" Padding="8" BackgroundColor="White" HasShadow="True">
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Image Source="llamar.png" WidthRequest="20" HeightRequest="20" Margin="0,0,8,0"/>
+                <Entry x:Name="TelefonoEntry" 
+                    Placeholder="Teléfono"
+                    PlaceholderColor="gray"
+                   Keyboard="Telephone" 
+                   WidthRequest="270"
+                   HeightRequest="35"
+                   FontSize="14"
+                   TextColor="Black"/>
+            </StackLayout>
+        </Frame>
+
+        <!-- Campo Dirección -->
+        <Frame CornerRadius="50" Padding="8" BackgroundColor="White" HasShadow="True">
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Image Source="ubicacion.png" WidthRequest="20" HeightRequest="20" Margin="0,0,8,0"/>
+                <Entry x:Name="DireccionEntry" 
+                       Placeholder="Dirección" 
+                       WidthRequest="270"
+                       PlaceholderColor="gray"
+                       HeightRequest="35"
+                       FontSize="14"
+                       FontAttributes="Bold"
+                       TextColor="Black"/>
+            </StackLayout>
+        </Frame>
+
+        <!-- Campo Email -->
+        <Frame CornerRadius="50" Padding="8" BackgroundColor="White" HasShadow="True">
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Image Source="email.png" WidthRequest="20" HeightRequest="20" Margin="0,0,8,0"/>
+                <Entry x:Name="EmailEntry"
+                       Placeholder="Email"
+                       PlaceholderColor="gray"
+                       Keyboard="Email" 
+                       WidthRequest="270"
+                       HeightRequest="35"
+                       FontSize="14"
+                       TextColor="Black"
+                       FontAttributes="Bold"/>
+                
+            </StackLayout>
+        </Frame>
+
+        <!-- Campo Contraseña -->
+        <Frame CornerRadius="50" Padding="8" BackgroundColor="White" HasShadow="True">
+            <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                <Image Source="email.png" WidthRequest="20" HeightRequest="20" Margin="0,0,8,0"/>
+                <Entry x:Name="PasswordEntry"
+                       IsPassword="True" 
+                       Placeholder="Password"
+                       PlaceholderColor="gray"
+                       WidthRequest="270"
+                       HeightRequest="35"
+                       FontSize="14"
+                       TextColor="Black"/>
+                
+            </StackLayout>
+        </Frame>
+        
+        
+        <!-- Label para mostrar resultados o errores -->
+        <Label x:Name="ResultLabel" 
+                   TextColor="Red" 
+                   HorizontalOptions="Center" />
+        
+        
+        <!-- Botón de Registro -->
+        <Button Text="Registrar" 
+            TextColor="White" 
+            BackgroundColor="Purple" 
+            FontAttributes="Bold" 
+            FontSize="18" 
+            CornerRadius="25" 
+            HeightRequest="50" 
+            Margin="0,20,0,0"
+            Clicked="OnRegistrarClicked"/>
+
+    </VerticalStackLayout>
+</ContentPage>

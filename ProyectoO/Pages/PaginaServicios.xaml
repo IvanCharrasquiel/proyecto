@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.PaginaServicios"
+             Title="PaginaServicios"
+             BackgroundColor="White">
+
+    <ScrollView>
+        <StackLayout Padding="20">
+
+            <!-- Cuadro de búsqueda -->
+            <Frame Padding="0" CornerRadius="25" BackgroundColor="#F0F0F0" HasShadow="False" HeightRequest="48">
+                <SearchBar Placeholder="Search Customers"
+                           FontSize="18"
+                           Margin="0"
+                           BackgroundColor="Transparent"
+                           PlaceholderColor="#888"
+                           TextColor="#000"
+                           HeightRequest="50" />
+            </Frame>
+
+            <!-- Título -->
+            <Label Text="Servicios"
+               FontSize="32"
+               FontAttributes="Bold"
+               
+               Margin="0,50,0,20"
+               TextColor="#333" />
+
+            <!-- Cuadrícula de servicios -->
+            <Grid ColumnSpacing="15"
+              RowSpacing="15">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                    <RowDefinition Height="Auto" />
+                </Grid.RowDefinitions>
+
+                <!-- Elementos de servicios -->
+                <Frame Grid.Row="0" Grid.Column="0" BorderColor="#DDD" CornerRadius="10" HeightRequest="250" WidthRequest="170" Padding="10" BackgroundColor="#FFF">
+                    <StackLayout>
+                        <Label Text="alisado" FontSize="16" FontAttributes="Bold" HorizontalOptions="Start" TextColor="#555" />
+                        <Image Source="alisado.jpg" Aspect="AspectFill" HeightRequest="150" HorizontalOptions="Fill" Margin="0,5,0,5" />
+                        <Button Text="Ver" HorizontalOptions="Center" BackgroundColor="#6A0DAD" TextColor="#FFF" CornerRadius="20" Padding="10" WidthRequest="120" Clicked="OnVerservicioClicked" />
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="0" Grid.Column="1" BorderColor="#DDD" CornerRadius="10" HeightRequest="250" WidthRequest="170" Padding="10" BackgroundColor="#FFF">
+                    <StackLayout>
+                        <Label Text="uñas" FontSize="16" FontAttributes="Bold" HorizontalOptions="Start" TextColor="#555" />
+                        <Image Source="unas.jpg" Aspect="AspectFill" HeightRequest="150" HorizontalOptions="Fill" Margin="0,5,0,5" />
+                        <Button Text="Ver" HorizontalOptions="Center" BackgroundColor="#6A0DAD" TextColor="#FFF" CornerRadius="20" Padding="10" WidthRequest="120" />
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="1" Grid.Column="0" BorderColor="#DDD" CornerRadius="10" HeightRequest="250" WidthRequest="170" Padding="10" BackgroundColor="#FFF">
+                    <StackLayout>
+                        <Label Text="Coloración" FontSize="16" FontAttributes="Bold" HorizontalOptions="Start" TextColor="#555" />
+                        <Image Source="coloracion.jpg" Aspect="AspectFill" HeightRequest="150" HorizontalOptions="Fill" Margin="0,5,0,5" />
+                        <Button Text="Ver" HorizontalOptions="Center" BackgroundColor="#6A0DAD" TextColor="#FFF" CornerRadius="20" Padding="10" WidthRequest="120" />
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="1" Grid.Column="1" BorderColor="#DDD" CornerRadius="10" HeightRequest="250" WidthRequest="170" Padding="10" BackgroundColor="#FFF">
+                    <StackLayout>
+                        <Label Text="barba" FontSize="16" FontAttributes="Bold" HorizontalOptions="Start" TextColor="#555" />
+                        <Image Source="barba.jpg" Aspect="AspectFill" HeightRequest="150" HorizontalOptions="Fill" Margin="0,5,0,5" />
+                        <Button Text="Ver" HorizontalOptions="Center" BackgroundColor="#6A0DAD" TextColor="#FFF" CornerRadius="20" Padding="10" WidthRequest="120" />
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="2" Grid.Column="0" BorderColor="#DDD" CornerRadius="10" HeightRequest="250" WidthRequest="170" Padding="10" BackgroundColor="#FFF">
+                    <StackLayout>
+                        <Label Text="Servicio 5" FontSize="16" FontAttributes="Bold" HorizontalOptions="Start" TextColor="#555" />
+                        <Image Source="service_image_placeholder.png" Aspect="AspectFill" HeightRequest="150" HorizontalOptions="Fill" Margin="0,5,0,5" />
+                        <Button Text="Ver" HorizontalOptions="Center" BackgroundColor="#6A0DAD" TextColor="#FFF" CornerRadius="20" Padding="10" WidthRequest="120" />
+                    </StackLayout>
+                </Frame>
+                <Frame Grid.Row="2" Grid.Column="1" BorderColor="#DDD" CornerRadius="10" HeightRequest="250" WidthRequest="170" Padding="10" BackgroundColor="#FFF">
+                    <StackLayout>
+                        <Label Text="Servicio 6" FontSize="16" FontAttributes="Bold" HorizontalOptions="Start" TextColor="#555" />
+                        <Image Source="service_image_placeholder.png" Aspect="AspectFill" HeightRequest="150" HorizontalOptions="Fill" Margin="0,5,0,5" />
+                        <Button Text="Ver" HorizontalOptions="Center" BackgroundColor="#6A0DAD" TextColor="#FFF" CornerRadius="20" Padding="10" WidthRequest="120" />
+                    </StackLayout>
+                </Frame>
+            </Grid>
+
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

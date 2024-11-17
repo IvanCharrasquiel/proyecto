@@ -1,0 +1,68 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.InicioSesion.PaginaInicioSesion"
+             Title="Inicio de Sesión"
+             BackgroundColor="White">
+    <VerticalStackLayout Spacing="20" Padding="30" VerticalOptions="CenterAndExpand">
+
+        <Frame CornerRadius="60" WidthRequest="120" HeightRequest="120" BackgroundColor="#E0E0E0" HasShadow="True" Padding="0">
+            <Image Source="icono.png" WidthRequest="250" HeightRequest="125" VerticalOptions="Center" HorizontalOptions="Center"/>
+        </Frame>
+
+        <Label Text="Bienvenido!" TextColor="#333333" FontAttributes="Bold" FontSize="24" HorizontalOptions="Center"/>
+
+        <Label Text="Sign in to continue" TextColor="#666666" FontSize="16" HorizontalOptions="Center"/>
+
+        <VerticalStackLayout Spacing="15" Margin="0,40,0,0">
+
+            <!-- Campo de Email -->
+            <Frame CornerRadius="50" Padding="10" BackgroundColor="White" HasShadow="True">
+                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                    <Image Source="avatar.png" WidthRequest="24" HeightRequest="24" Margin="0,0,10,0"/>
+                    <Entry x:Name="EmailEntry" 
+                       FontAttributes="Bold" 
+                       WidthRequest="250"
+                       TextColor="Black"
+                       Placeholder="Email" 
+                       Keyboard="Email" 
+                       Text="{Binding Email}"/>
+                </StackLayout>
+            </Frame>
+
+            <!-- Campo de Contraseña -->
+            <Frame CornerRadius="50" Padding="10" BackgroundColor="White" HasShadow="True">
+                <StackLayout Orientation="Horizontal" VerticalOptions="Center">
+                    <Image Source="bloquear.png" WidthRequest="24" HeightRequest="24" Margin="0,0,10,0"/>
+                    <Entry x:Name="PasswordEntry"
+                           Placeholder="Password" 
+                           IsPassword="True" 
+                           FontAttributes="Bold" 
+                           WidthRequest="250"
+                           TextColor="Black"
+                           Text="{Binding Contraseña}"/>
+                </StackLayout>
+            </Frame>
+
+        </VerticalStackLayout>
+
+        <Button Text="Login" 
+            TextColor="White" 
+            BackgroundColor="Purple" 
+            FontAttributes="Bold" 
+            FontSize="18" 
+            CornerRadius="25" 
+            HeightRequest="50" 
+            Margin="0,20,0,0"
+            Clicked="OnLoginClicked"/>
+        <Label x:Name="ResultLabel" 
+               TextColor="Red" 
+               HorizontalOptions="Center" />
+        
+        <HorizontalStackLayout HorizontalOptions="Center" VerticalOptions="Center" Margin="0,30,0,0" Spacing="5">
+            <Label Text="New User?" TextColor="#666666" FontSize="Small" VerticalOptions="Center"/>
+            <Button Text="Sign Up" BackgroundColor="Transparent" TextColor="Purple" FontAttributes="Bold" VerticalOptions="Center" Clicked="OnSignUpClicked"/>
+        </HorizontalStackLayout>
+
+    </VerticalStackLayout>
+</ContentPage>

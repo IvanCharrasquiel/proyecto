@@ -1,0 +1,123 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Maestro"
+             Title="Menú">
+    <VerticalStackLayout BackgroundColor="White" Padding="20, 40, 20, 20" Spacing="20">
+        <!-- Sección del perfil -->
+        <VerticalStackLayout HorizontalOptions="Center" Spacing="5">
+            <Image x:Name="PerfilImage" Source="default_profile.png"
+                   WidthRequest="80"
+                   HeightRequest="80"
+                   Aspect="AspectFill">
+                <Image.Clip>
+                    <EllipseGeometry Center="40,40" RadiusX="40" RadiusY="40"/>
+                </Image.Clip>
+            </Image>
+            <Label x:Name="NombreLabel"
+                   FontAttributes="Bold"
+                   FontSize="18"
+                   TextColor="Black"
+                   HorizontalOptions="Center"/>
+            <Label x:Name="EmailLabel"
+                   FontSize="14"
+                   TextColor="Gray"
+                   HorizontalOptions="Center"/>
+        </VerticalStackLayout>
+
+        <!-- Opciones de menú con iconos -->
+        <VerticalStackLayout Padding="10,20,10,0" Spacing="15">
+            <!-- Home -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="hogar.png" WidthRequest="24" HeightRequest="24" />
+                <Button Text="Home"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        TextColor="Black"
+                        BackgroundColor="Transparent"
+                        Grid.Column="1"
+                        HorizontalOptions="FillAndExpand"
+                        Padding="10,0,0,0"
+                        Clicked="OnHomeClicked"/>
+            </Grid>
+
+            <!-- Mis reservas -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="cita.png" WidthRequest="24" HeightRequest="24" />
+                <Button Text="Mis Reservas"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        TextColor="Black"
+                        BackgroundColor="Transparent"
+                        Grid.Column="1"
+                        HorizontalOptions="FillAndExpand"
+                        Padding="10,0,0,0"
+                        Clicked="OnMisReservasClicked"/>
+            </Grid>
+
+            <!-- Servicios -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="servicio.png" WidthRequest="24" HeightRequest="24" />
+                <Button Text="Servicios"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        TextColor="Black"
+                        BackgroundColor="Transparent"
+                        Grid.Column="1"
+                        HorizontalOptions="FillAndExpand"
+                        Padding="10,0,0,0"
+                        Clicked="OnServicesClicked"/>
+            </Grid>
+
+            
+
+            <!-- Ver Perfil -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="perfil_icon.png" WidthRequest="24" HeightRequest="24" />
+                <Button Text="Ver Perfil"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        TextColor="Black"
+                        BackgroundColor="Transparent"
+                        Grid.Column="1"
+                        HorizontalOptions="FillAndExpand"
+                        Padding="10,0,0,0"
+                        Clicked="OnVerPerfilClicked"/>
+            </Grid>
+
+            <!-- Cerrar Sesión -->
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="logout.png" WidthRequest="24" HeightRequest="24" />
+                <Button Text="Cerrar Sesión"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        TextColor="Black"
+                        BackgroundColor="Transparent"
+                        Grid.Column="1"
+                        HorizontalOptions="FillAndExpand"
+                        Padding="10,0,0,0"
+                        Clicked="OnCerrarSesionClicked"/>
+            </Grid>
+        </VerticalStackLayout>
+    </VerticalStackLayout>
+</ContentPage>

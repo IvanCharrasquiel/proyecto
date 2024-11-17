@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.PaginaGeneralServicios"
+             Title="Corte de pelo"
+             BackgroundColor="white">
+    <ScrollView>
+        <VerticalStackLayout Padding="20" Spacing="10">
+            <Label Margin="0,50,0,0"
+                Text="Corte de pelo" 
+                   FontSize="24" 
+                   FontAttributes="Bold"
+                   TextColor="Black"/>
+
+            <Frame BorderColor="LightGray" CornerRadius="10" Padding="0">
+                <Image Source="alisado.jpg" Aspect="AspectFill" HeightRequest="200" />
+            </Frame>
+
+            <Label Text="Descripción: te van a cortar el pelo oty"
+                   FontSize="16" 
+                   TextColor="Black"/>
+
+            <Label Text="Precio: 25.000"
+                   FontSize="16" 
+                   FontAttributes="Bold"/>
+
+            <Label Text="Duración: 50 minutos"
+                   FontSize="16" 
+                   TextColor="Black"/>
+
+            <Button Text="Reservar" 
+                    BackgroundColor="purple" 
+                    TextColor="White" 
+                    CornerRadius="8" 
+                    HeightRequest="45"
+                    Clicked="OnClickedPaginaReserva"/>
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
