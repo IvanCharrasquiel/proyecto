@@ -2,19 +2,22 @@ using ProyectoO.Services.Interfaces;
 using Microsoft.Maui.Controls;
 using System;
 using ProyectoO.Services;
+using ProyectoO.Pages.Servicios;
+using ProyectoO.Pages.Reservas;
 
 namespace ProyectoO.Pages
 {
     public partial class Maestro : ContentPage
     {
         private readonly IPersonaService _personaService;
+        private readonly IAuthService _authService;
 
-        public Maestro(IPersonaService personaService)
+        public Maestro(IPersonaService personaService, IAuthService authService)
         {
             InitializeComponent();
 
             _personaService = personaService;
-
+            _authService = authService;
             LoadUserProfile();
         }
 
@@ -54,11 +57,11 @@ namespace ProyectoO.Pages
             await App.FlyoutPage.Detail.Navigation.PushAsync(new PaginaReservas(_personaService));
             OcultarDetalles();
         }
-
+        
         private async void OnServicesClicked(object sender, EventArgs e)
         {
             // Navegar a la página de Servicios
-            await App.FlyoutPage.Detail.Navigation.PushAsync(new PaginaServicios(_personaService));
+            await App.FlyoutPage.Detail.Navigation.PushAsync(new ServiciosPage(_authService,_personaService));
             OcultarDetalles();
         }
 
@@ -89,6 +92,7 @@ namespace ProyectoO.Pages
             // Actualizar la página principal
             Application.Current.MainPage = new NavigationPage(new InicioSesion.PaginaInicioSesion(new AuthService(_personaService.BaseUrl), _personaService));
         }
+
 
         public static void NavigationToPage(ContentPage nuevaPagina)
         {

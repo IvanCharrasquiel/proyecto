@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Reservas.HistorialReservasPage"
+             Title="Mi Historial de Reservas">
+
+    <ContentPage.Content>
+        <StackLayout Padding="10" Spacing="15">
+            <Label Text="Reservas Pasadas y Futuras" FontAttributes="Bold" FontSize="Medium" />
+
+            <CollectionView x:Name="CollectionViewReservas"
+                            SelectionMode="None">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="LightGray" CornerRadius="5" Padding="10" Margin="5">
+                            <StackLayout>
+                                <Label Text="{Binding Servicio.NombreServicio}" FontAttributes="Bold" FontSize="Medium" />
+                                <Label Text="{Binding Fecha, StringFormat='Fecha: {0:dd/MM/yyyy}'}" />
+                                <Label Text="{Binding HoraInicio, StringFormat='Hora: {0:hh\\:mm tt}'}" />
+                                <Label Text="{Binding EstadoReserva}" TextColor="{Binding EstadoReserva, Converter={StaticResource EstadoReservaColorConverter}}" />
+                                <StackLayout Orientation="Horizontal" Spacing="10">
+                                    <Button Text="Reprogramar" Clicked="OnReprogramarClicked" CommandParameter="{Binding .}" />
+                                    <Button Text="Cancelar" Clicked="OnCancelarClicked" CommandParameter="{Binding .}" />
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Mensaje cuando no hay reservas -->
+            <Label x:Name="LabelSinReservas"
+                   Text="No tienes reservas registradas."
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="CenterAndExpand" />
+
+            <!-- Mensaje de Resultado -->
+            <Label x:Name="ResultLabel"
+                   TextColor="Red"
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

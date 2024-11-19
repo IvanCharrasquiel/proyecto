@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Servicios.SeleccionarHorarioPage"
+             Title="Seleccionar Horario">
+
+    <ContentPage.Content>
+        <StackLayout Padding="10" Spacing="15">
+            <Label Text="Selecciona una Fecha" FontAttributes="Bold" FontSize="Medium" />
+
+            <!-- Calendario o Lista de Fechas -->
+            <DatePicker x:Name="DatePickerFecha"
+                        DateSelected="OnDateSelected" />
+
+            <!-- Lista de Horarios Disponibles -->
+            <CollectionView x:Name="CollectionViewHorarios"
+                            SelectionMode="Single"
+                            SelectionChanged="OnHorarioSelected">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="LightGray" CornerRadius="5" Padding="10" Margin="5">
+                            <Label Text="{Binding HoraInicio, StringFormat='Inicio: {0:hh\\:mm tt}'}" />
+                            <!--<Label Text="{Binding HoraFin, StringFormat='Fin: {0:hh\\:mm tt}'}" />-->
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Mensaje cuando no hay horarios -->
+            <Label x:Name="LabelSinHorarios"
+                   Text="No hay horarios disponibles para esta fecha."
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="CenterAndExpand" />
+
+            <!-- Mensaje de Resultado -->
+            <Label x:Name="ResultLabel"
+                   TextColor="Red"
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

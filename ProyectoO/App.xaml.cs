@@ -13,11 +13,12 @@ namespace ProyectoO
 
         public App()
         {
+            var UrlAPI = "https://da2b-190-217-65-139.ngrok-free.app";
             InitializeComponent();
 
             // Configurar los servicios
-            IAuthService authService = new AuthService("https://3d8e-190-217-65-139.ngrok-free.app");
-            IPersonaService personaService = new PersonaService("https://3d8e-190-217-65-139.ngrok-free.app");
+            IAuthService authService = new AuthService(UrlAPI);
+            IPersonaService personaService = new PersonaService(UrlAPI);
 
             // Inicializar la página de inicio de sesión con los servicios
             MainPage = new NavigationPage(new PaginaInicioSesion(authService, personaService));

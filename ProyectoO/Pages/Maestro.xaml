@@ -44,7 +44,23 @@
                         Padding="10,0,0,0"
                         Clicked="OnHomeClicked"/>
             </Grid>
-
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                </Grid.ColumnDefinitions>
+                <Image Source="perfil_icon.png" WidthRequest="24" HeightRequest="24" />
+                <Button Text="Ver Perfil"
+                        FontAttributes="Bold"
+                        FontSize="16"
+                        TextColor="Black"
+                        BackgroundColor="Transparent"
+                        Grid.Column="1"
+                        HorizontalOptions="FillAndExpand"
+                        Padding="10,0,0,0"
+                        Clicked="OnVerPerfilClicked"/>
+            </Grid>
+            
             <!-- Mis reservas -->
             <Grid>
                 <Grid.ColumnDefinitions>
@@ -62,6 +78,41 @@
                         Padding="10,0,0,0"
                         Clicked="OnMisReservasClicked"/>
             </Grid>
+            <!-- Nueva opción: Reprogramar Reserva -->
+            <!--<Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Source="calendar_edit.png" WidthRequest="24" HeightRequest="24" />
+                <Button Text="Reprogramar Reserva"
+            FontAttributes="Bold"
+            FontSize="16"
+            TextColor="Black"
+            BackgroundColor="Transparent"
+            Grid.Column="1"
+            HorizontalOptions="FillAndExpand"
+            Padding="10,0,0,0"
+            Clicked="OnReprogramarReservaClicked" />
+            </Grid>-->
+
+            <!-- Nueva opción: Confirmar Reserva -->
+            <!--<Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto" />
+                    <ColumnDefinition Width="*" />
+                </Grid.ColumnDefinitions>
+                <Image Source="confirm.png" WidthRequest="24" HeightRequest="24" />
+                <Button Text="Confirmar Reserva"
+            FontAttributes="Bold"
+            FontSize="16"
+            TextColor="Black"
+            BackgroundColor="Transparent"
+            Grid.Column="1"
+            HorizontalOptions="FillAndExpand"
+            Padding="10,0,0,0"
+            Clicked="OnConfirmarReservaClicked" />
+            </Grid>-->
 
             <!-- Servicios -->
             <Grid>
@@ -84,22 +135,7 @@
             
 
             <!-- Ver Perfil -->
-            <Grid>
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="Auto"/>
-                    <ColumnDefinition Width="*"/>
-                </Grid.ColumnDefinitions>
-                <Image Source="perfil_icon.png" WidthRequest="24" HeightRequest="24" />
-                <Button Text="Ver Perfil"
-                        FontAttributes="Bold"
-                        FontSize="16"
-                        TextColor="Black"
-                        BackgroundColor="Transparent"
-                        Grid.Column="1"
-                        HorizontalOptions="FillAndExpand"
-                        Padding="10,0,0,0"
-                        Clicked="OnVerPerfilClicked"/>
-            </Grid>
+            
 
             <!-- Cerrar Sesión -->
             <Grid>

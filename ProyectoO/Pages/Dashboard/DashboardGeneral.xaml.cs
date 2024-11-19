@@ -3,6 +3,8 @@ using ProyectoO.Services.Interfaces;
 using Microsoft.Maui.Controls;
 using System;
 using ProyectoO.Services;
+using ProyectoO.Pages.Servicios;
+using ProyectoO.Pages.Reservas;
 
 namespace ProyectoO.Pages.Dashboard
 {
@@ -86,23 +88,25 @@ namespace ProyectoO.Pages.Dashboard
             }
         }
 
-        private void OnGestionarServiciosClicked(object sender, EventArgs e)
-        {
-            NavigationToPage(new PaginaServicios(_personaService));
-            OcultarDetalles();
-        }
-
         private async void OnReservarCitaClicked(object sender, EventArgs e)
         {
-            // Navegar a la página de reserva de citas
-            await Navigation.PushAsync(new PaginaReservas(_personaService));
+            // Navegar al flujo de reserva (nueva lógica)
+            await Navigation.PushAsync(new SeleccionarEmpleadoPage(new AuthService(_personaService.BaseUrl), _personaService, new ServicioDTO()));
         }
 
         private async void OnVerHistorialCitasClicked(object sender, EventArgs e)
         {
-            // Navegar a la página de historial de citas
-            await Navigation.PushAsync(new PaginaHistorialCitas(_personaService));
+            // Navegar al historial de reservas del cliente
+            await Navigation.PushAsync(new HistorialReservasPage(new AuthService(_personaService.BaseUrl), _personaService));
         }
+
+        private void OnGestionarServiciosClicked(object sender, EventArgs e)
+        {
+            // Navegar al flujo de gestión de servicios
+            NavigationToPage(new ServiciosPage(new AuthService(_personaService.BaseUrl), _personaService));
+            OcultarDetalles();
+        }
+
 
         public static void NavigationToPage(ContentPage nuevaPagina)
         {

@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Servicios.SeleccionarEmpleadoPage"
+             Title="Seleccionar Empleado">
+
+    <ContentPage.Content>
+        <StackLayout Padding="10">
+            <Label Text="Selecciona un Empleado" FontAttributes="Bold" FontSize="Medium" />
+
+            <!-- Lista de Empleados -->
+            <CollectionView x:Name="CollectionViewEmpleados"
+                            SelectionMode="Single"
+                            SelectionChanged="OnEmpleadoSelected">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="LightGray" CornerRadius="5" Padding="10" Margin="5" InputTransparent="True">
+                            <StackLayout Orientation="Horizontal" Spacing="10">
+                                <!-- Asegúrate de que la ruta de la imagen es correcta -->
+                                <Image Source="{Binding Persona.FotoPerfil}" WidthRequest="60" HeightRequest="60" Aspect="AspectFill" />
+                                <StackLayout VerticalOptions="Center">
+                                    <Label Text="{Binding Persona.Nombre}" FontAttributes="Bold" />
+                                    <Label Text="{Binding Persona.Apellido}" />
+                                    <Label Text="{Binding Cargo.NombreCargo}" FontSize="Small" TextColor="Gray" />
+                                </StackLayout>
+                            </StackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Mensaje cuando no hay empleados -->
+            <Label x:Name="LabelSinEmpleados"
+                   Text="No hay empleados disponibles para este servicio."
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="CenterAndExpand" />
+
+            <!-- Mensaje de Resultado -->
+            <Label x:Name="ResultLabel"
+                   TextColor="Red"
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

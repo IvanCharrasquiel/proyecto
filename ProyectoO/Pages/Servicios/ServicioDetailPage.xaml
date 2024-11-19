@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Servicios.ServicioDetailPage"
+             Title="Detalles del Servicio">
+
+    <ContentPage.Content>
+        <ScrollView>
+            <StackLayout Padding="10" Spacing="15">
+                <Label Text="{Binding NombreServicio}" FontAttributes="Bold" FontSize="Large" HorizontalOptions="Center" />
+
+                <Label Text="{Binding Descripcion}" FontSize="Medium" />
+
+                <StackLayout Orientation="Horizontal" Spacing="10">
+                    <Label Text="{Binding Precio, StringFormat='Precio: {0:C}'}" FontSize="Medium" />
+                    <Label Text="{Binding Duracion, StringFormat='Duración: {0} min'}" FontSize="Medium" />
+                </StackLayout>
+
+                <!-- Promociones -->
+                <Label Text="Promociones Actuales:" FontAttributes="Bold" FontSize="Medium" />
+                <CollectionView ItemsSource="{Binding Promociones}" 
+                                IsVisible="{Binding Promociones.Count, Converter={StaticResource GreaterThanZeroConverter}}">
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame BorderColor="Gold" CornerRadius="5" Padding="5" Margin="5">
+                                <StackLayout>
+                                    <Label Text="{Binding Descripcion}" FontAttributes="Italic" />
+                                    <Label Text="{Binding Descuento, StringFormat='Descuento: {0}%'}" TextColor="Red" />
+                                </StackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+
+                <!-- Botón para Proceder a la Reserva -->
+                <Button Text="Reservar este Servicio" Clicked="OnReservarClicked" BackgroundColor="Green" TextColor="White" />
+
+                <!-- Mensaje de Resultado -->
+                <Label x:Name="ResultLabel" TextColor="Red" IsVisible="False" />
+            </StackLayout>
+        </ScrollView>
+    </ContentPage.Content>
+</ContentPage>

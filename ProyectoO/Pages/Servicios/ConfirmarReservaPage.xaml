@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             xmlns:sys="clr-namespace:System;assembly=netstandard"
+             x:Class="ProyectoO.Pages.Servicios.ConfirmarReservaPage"
+             Title="Confirmar Reserva">
+
+    <ContentPage.Content>
+        <StackLayout Padding="10" Spacing="15">
+            <Label Text="Confirma tu Reserva" FontAttributes="Bold" FontSize="Medium" />
+
+            <Frame BorderColor="LightGray" CornerRadius="5" Padding="10">
+                <StackLayout>
+                    <Label Text="{Binding Servicio.NombreServicio}" FontAttributes="Bold" FontSize="Large" />
+                    <Label Text="{Binding Servicio.Descripcion}" FontSize="Medium" />
+                    <Label Text="{Binding Servicio.Precio, StringFormat='Precio: {0:C}'}" />
+                    <Label Text="{Binding Servicio.Duracion, StringFormat='Duración: {0} min'}" />
+                </StackLayout>
+            </Frame>
+
+            <Frame BorderColor="LightGray" CornerRadius="5" Padding="10">
+                <StackLayout>
+                    <Label Text="Empleado Seleccionado:" FontAttributes="Bold" />
+                    <Label Text="{Binding Empleado.Nombre}" />
+                    <Label Text="{Binding Empleado.Apellido}" />
+                    <Label Text="{Binding Empleado.Rol}" />
+                </StackLayout>
+            </Frame>
+
+            <Frame BorderColor="LightGray" CornerRadius="5" Padding="10">
+                <StackLayout>
+                    <Label Text="Fecha y Horario:" FontAttributes="Bold" />
+
+                    <!-- DatePicker para seleccionar la fecha -->
+                    <DatePicker x:Name="DatePickerFecha"
+                                Date="{Binding Fecha}"
+                                MinimumDate="{x:Static sys:DateTime.Today}"
+                                MaximumDate="{Binding FechaMaxima}"
+                                HorizontalOptions="FillAndExpand" />
+
+                    <Label Text="{Binding Fecha, StringFormat='Fecha Seleccionada: {0:dd/MM/yyyy}'}" />
+
+                    <Label Text="{Binding Horario.HoraInicio, StringFormat='Inicio: {0:hh\\:mm tt}'}" />
+                    <Label Text="{Binding Horario.HoraFin, StringFormat='Fin: {0:hh\\:mm tt}'}" />
+                </StackLayout>
+            </Frame>
+
+            <!-- Resumen de Promociones -->
+            <StackLayout IsVisible="{Binding TienePromociones}">
+                <Label Text="Promociones Aplicables:" FontAttributes="Bold" FontSize="Medium" />
+                <Label Text="{Binding PromocionesAplicables}" FontSize="Medium" TextColor="Green" />
+            </StackLayout>
+
+            <!-- Botón para Confirmar Reserva -->
+            <Button Text="Confirmar Reserva" Clicked="OnConfirmarClicked" BackgroundColor="Blue" TextColor="White" />
+
+            <!-- Mensaje de Resultado -->
+            <Label x:Name="ResultLabel"
+                   TextColor="Red"
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>

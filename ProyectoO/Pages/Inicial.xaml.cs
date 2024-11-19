@@ -7,7 +7,8 @@ namespace ProyectoO.Pages
 {
     public partial class Inicial : ContentPage
     {
-        private readonly IPersonaService _personaService;
+        private readonly IPersonaService _personaService; 
+        private readonly IAuthService _authService;
 
         public Inicial(IPersonaService personaService)
         {
@@ -21,7 +22,7 @@ namespace ProyectoO.Pages
             // Navegar al Dashboard correspondiente
             FlyoutPage flyout = new FlyoutPage
             {
-                Flyout = new Maestro(_personaService),
+                Flyout = new Maestro(_personaService,_authService),
                 Detail = new NavigationPage(new Dashboard.DashboardGeneral(_personaService))
             };
             App.FlyoutPage = flyout; // Definido en App.xaml.cs
