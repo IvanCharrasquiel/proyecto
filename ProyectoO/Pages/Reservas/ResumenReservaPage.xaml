@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Reservas.ResumenReservaPage"
+             Title="Resumen de Reserva">
+
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+            <Label Text="Resumen de tu Reserva" FontAttributes="Bold" FontSize="Large" HorizontalOptions="Center" />
+
+            <!-- Fecha y Hora -->
+            <Label Text="Fecha y Hora:" FontAttributes="Bold" />
+            <Label Text="{Binding FechaSeleccionada, StringFormat='Fecha: {0:dd/MM/yyyy}'}" />
+            <Label Text="{Binding HorarioSeleccionado.HoraInicio, StringFormat='Hora: {0:hh\\:mm}'}" />
+
+            <!-- Servicios -->
+            <Label Text="Servicios Seleccionados:" FontAttributes="Bold" />
+            <CollectionView ItemsSource="{Binding ServiciosSeleccionados}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout>
+                            <Label Text="{Binding NombreServicio}" FontAttributes="Bold" />
+                            <Label Text="{Binding Precio, StringFormat='Precio: {0:C}'}" />
+                            <Label Text="{Binding Duracion, StringFormat='Duración: {0} minutos'}" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Precio Total -->
+            <Label Text="{Binding PrecioTotal, StringFormat='Total: {0:C}'}" FontAttributes="Bold" FontSize="Large" HorizontalOptions="Center" />
+
+            <!-- Botón de Confirmación -->
+            <Button Text="Confirmar Reserva" Command="{Binding ConfirmarReservaCommand}" BackgroundColor="Green" TextColor="White" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

@@ -20,7 +20,6 @@ namespace ProyectoO.Services
         public PersonaDTO CurrentUser { get; set; }
         public string CurrentRole { get; set; }
 
-        // Constructor privado para Singleton
         private UserService() { }
     }
 }

@@ -4,6 +4,8 @@ using Microsoft.Maui.Controls;
 using Microsoft.Maui.Storage;
 using System;
 using ProyectoO.Services;
+using ProyectoO.Pages.Dashboard;
+using ProyectoO.Pages.Servicios;
 
 namespace ProyectoO.Pages.InicioSesion
 {
@@ -24,70 +26,6 @@ namespace ProyectoO.Pages.InicioSesion
         {
             await Navigation.PushAsync(new Registro.Registro(_authService));
         }
-
-        //private async void OnLoginClicked(object sender, EventArgs e)
-        //{
-        //    var email = EmailEntry.Text;
-        //    var contraseña = PasswordEntry.Text;
-
-        //    if (string.IsNullOrWhiteSpace(email) || string.IsNullOrWhiteSpace(contraseña))
-        //    {
-        //        ResultLabel.Text = "Por favor, ingresa tu correo y contraseña.";
-        //        return;
-        //    }
-
-        //    try
-        //    {
-        //        ResultLabel.Text = "Iniciando sesión...";
-
-        //        var loginResponse = await _authService.LoginAsync(email, contraseña);
-
-        //        if (loginResponse != null)
-        //        {
-        //            // Almacenar el rol del usuario
-        //            UserService.Instance.CurrentRole = loginResponse.Role;
-
-        //            // Obtener los datos de la Persona usando IdPersona
-        //            var persona = await _personaService.GetPersonaByIdAsync(loginResponse.IdPersona);
-
-        //            if (persona != null)
-        //            {
-        //                // Almacenar la persona en el UserService
-        //                UserService.Instance.CurrentUser = persona;
-
-        //                // Almacenar el token en SecureStorage si es necesario
-        //                await SecureStorage.SetAsync("IsLoggedIn", "true");
-        //                await SecureStorage.SetAsync("UserRole", loginResponse.Role);
-        //                await SecureStorage.SetAsync("AuthToken", loginResponse.Token);
-
-        //                // Establecer el encabezado de autorización para futuras solicitudes
-        //                _authService.SetAuthorizationHeader(loginResponse.Token);
-
-        //                // Navegar al Dashboard correspondiente
-        //                FlyoutPage flyout = new FlyoutPage
-        //                {
-        //                    Flyout = new Maestro(_personaService),
-        //                    Detail = new NavigationPage(GetDashboardPage(loginResponse.Role))
-        //                };
-        //                App.FlyoutPage = flyout; // Definido en App.xaml.cs
-        //                Application.Current.MainPage = flyout;
-        //            }
-        //            else
-        //            {
-        //                ResultLabel.Text = "No se encontró la información de la persona.";
-        //            }
-        //        }
-        //        else
-        //        {
-        //            ResultLabel.Text = "Credenciales inválidas.";
-        //        }
-        //    }
-        //    catch (Exception ex)
-        //    {
-        //        // Añade más detalles al mensaje de error
-        //        ResultLabel.Text = $"Error al iniciar sesión: {ex.Message}";
-        //    }
-        //}
 
         private async void OnLoginClicked(object sender, EventArgs e)
         {
@@ -130,7 +68,7 @@ namespace ProyectoO.Pages.InicioSesion
                             // Navegar al Dashboard correspondiente
                             FlyoutPage flyout = new FlyoutPage
                             {
-                                Flyout = new Maestro(_personaService),
+                                Flyout = new Maestro(_personaService,_authService),
                                 Detail = new NavigationPage(GetDashboardPage(loginResponse.Role))
                             };
                             App.FlyoutPage = flyout; // Definido en App.xaml.cs
@@ -184,12 +122,13 @@ namespace ProyectoO.Pages.InicioSesion
             switch (role.ToLower())
             {
                 case "empleado":
-                    return new Dashboard.DashboardGeneral(_personaService);
+                    return new DashboardGeneral(_personaService); // Navegar al dashboard general del empleado
                 case "cliente":
-                    return new Dashboard.DashboardGeneral(_personaService); // Puedes crear DashboardCliente si es necesario
+                    return new SeleccionarEmpleadoPage(new AuthService(_personaService.BaseUrl), _personaService, new ServicioDTO()); // Flujo inicial para clientes
                 default:
-                    return new Dashboard.DashboardGeneral(_personaService); // Página genérica en caso de rol desconocido
+                    return new DashboardGeneral(_personaService); // Página genérica por defecto
             }
         }
+
     }
 }

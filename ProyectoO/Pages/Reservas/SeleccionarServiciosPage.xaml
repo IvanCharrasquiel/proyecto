@@ -1,0 +1,22 @@
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Reservas.SeleccionarServiciosPage"
+             Title="Seleccionar Servicios">
+    <StackLayout Padding="20" Spacing="15">
+        <Label Text="Selecciona los Servicios:" FontAttributes="Bold" />
+        <CollectionView ItemsSource="{Binding ServiciosDisponibles}" SelectionMode="None">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <StackLayout Orientation="Horizontal" Padding="5">
+                        <Label Text="{Binding NombreServicio}" VerticalOptions="Center" />
+                        <Switch IsToggled="{Binding IsSelected}" />
+                    </StackLayout>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Text="Siguiente"
+                Command="{Binding ContinuarCommand}"
+                IsEnabled="{Binding PuedeContinuar}" />
+    </StackLayout>
+</ContentPage>

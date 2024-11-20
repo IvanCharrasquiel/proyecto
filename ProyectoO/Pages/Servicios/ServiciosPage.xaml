@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Servicios.ServiciosPage"
+             Title="Servicios Disponibles">
+
+    <ContentPage.Content>
+        <StackLayout Padding="10">
+            <!-- Barra de búsqueda -->
+            <SearchBar x:Name="SearchBarServicios"
+                       Placeholder="Buscar servicios..."
+                       TextChanged="OnSearchBarTextChanged" />
+
+            <!-- Lista de Servicios -->
+            <CollectionView x:Name="CollectionViewServicios"
+                            SelectionMode="Single"
+                            SelectionChanged="OnServicioSelected">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame BorderColor="LightGray" CornerRadius="5" Padding="10" Margin="5" InputTransparent="True">
+                            <StackLayout>
+                                <HorizontalStackLayout>
+                                    <StackLayout>
+                                        <Label Text="{Binding NombreServicio}" FontAttributes="Bold" FontSize="Medium" />
+                                <Label Text="{Binding Descripcion}" FontSize="Small" />
+                                <StackLayout Orientation="Horizontal" Spacing="10">
+                                    <Label Text="{Binding Precio, StringFormat='Precio: {0:C}'}" />
+                                    <Label Text="{Binding Duracion, StringFormat='Duración: {0} min'}" />
+                                </StackLayout>
+                                       
+                                    </StackLayout>
+                                </HorizontalStackLayout>
+                                
+                                
+                                
+                            </StackLayout>
+                            
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <!-- Mensaje cuando no hay servicios -->
+            <Label x:Name="LabelSinServicios"
+                   Text="No hay servicios disponibles."
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="CenterAndExpand" />
+
+            <!-- Mensaje de Resultado -->
+            <Label x:Name="ResultLabel"
+                   TextColor="Red"
+                   IsVisible="False"
+                   HorizontalOptions="Center"
+                   VerticalOptions="End" />
+        </StackLayout>
+    </ContentPage.Content>
+</ContentPage>
