@@ -30,6 +30,7 @@ namespace ProyectoO.Pages.Servicios
             _servicio = servicio;
 
             LoadEmpleados();
+            int idCliente = UserService.Instance.CurrentIdUser;
         }
 
         private async void LoadEmpleados()
@@ -67,10 +68,11 @@ namespace ProyectoO.Pages.Servicios
             var empleado = e.CurrentSelection.FirstOrDefault() as EmpleadoDTO;
             if (empleado != null)
             {
-                NavigationToPage(new SeleccionarFechaPage(empleado.IdEmpleado, _apiService, _servicio.IdServicio, _auth));
-                CollectionViewEmpleados.SelectedItem = null; // Deseleccionar
+                NavigationToPage(new SeleccionarFechaPage(empleado, _apiService, _servicio.IdServicio, _auth));
+                CollectionViewEmpleados.SelectedItem = null;
             }
         }
+
 
         public static void NavigationToPage(ContentPage nuevaPagina)
         {

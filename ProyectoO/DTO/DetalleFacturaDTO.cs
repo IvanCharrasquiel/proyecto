@@ -1,5 +1,5 @@
 ﻿// DTO/DetalleFacturaDTO.cs
-namespace APIProyecto.DTO
+namespace ProyectoO.DTO
 {
     public class DetalleFacturaDTO
     {
@@ -9,5 +9,8 @@ namespace APIProyecto.DTO
         public int CantidadServicio { get; set; }
         public int IdFactura { get; set; }
         public int IdServicioReserva { get; set; }
+
+        // Puedes agregar propiedades adicionales si lo deseas, como el nombre del servicio
+        public string NombreServicio { get; set; } = string.Empty;
     }
 }

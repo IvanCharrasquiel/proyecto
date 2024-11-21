@@ -139,7 +139,7 @@ namespace APIProyecto.Controllers
                 FechaContrato = DateTime.Now,
                 Comision = empleadoRegistroDTO.Comision,
                 IdCargo = empleadoRegistroDTO.IdCargo,
-                Contraseña = BCrypt.Net.BCrypt.HashPassword(empleadoRegistroDTO.Contraseña) // Usar hash para la contraseña
+                Contraseña = BCrypt.Net.BCrypt.HashPassword(empleadoRegistroDTO.Contraseña) 
             };
 
             _context.Empleados.Add(empleado);

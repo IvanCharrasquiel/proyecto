@@ -15,7 +15,7 @@ namespace ProyectoO.ViewModels
         private readonly HorarioDisponibleDTO _horarioSeleccionado;
         private readonly DateTime _fechaSeleccionada;
         private readonly List<ServicioDTO> _serviciosSeleccionados;
-        private readonly int _empleadoId;
+        private readonly EmpleadoDTO _empleado;
         private readonly ApiService _apiService;
         private readonly AuthService _authService;
 
@@ -24,14 +24,19 @@ namespace ProyectoO.ViewModels
         public List<ServicioDTO> ServiciosSeleccionados => _serviciosSeleccionados;
         public decimal PrecioTotal => ServiciosSeleccionados.Sum(s => s.Precio);
 
+        public TimeSpan DuracionTotal => TimeSpan.FromMinutes(ServiciosSeleccionados.Sum(s => s.Duracion));
+        public TimeSpan HoraFin => _horarioSeleccionado.HoraInicio + DuracionTotal;
+
+        public EmpleadoDTO Empleado => _empleado;
+
         public ICommand ConfirmarReservaCommand { get; }
 
-        public ResumenReservaViewModel(HorarioDisponibleDTO horarioSeleccionado, DateTime fechaSeleccionada, List<ServicioDTO> serviciosSeleccionados, int empleadoId, ApiService apiService, AuthService authService)
+        public ResumenReservaViewModel(HorarioDisponibleDTO horarioSeleccionado, DateTime fechaSeleccionada, List<ServicioDTO> serviciosSeleccionados, EmpleadoDTO empleado, ApiService apiService, AuthService authService)
         {
             _horarioSeleccionado = horarioSeleccionado;
             _fechaSeleccionada = fechaSeleccionada;
             _serviciosSeleccionados = serviciosSeleccionados;
-            _empleadoId = empleadoId;
+            _empleado = empleado;
             _apiService = apiService;
             _authService = authService;
 
@@ -40,30 +45,28 @@ namespace ProyectoO.ViewModels
 
         private async Task ConfirmarReserva()
         {
-            
             try
             {
                 var reserva = new ReservaDTO
-                { 
+                {
                     Fecha = _fechaSeleccionada.Date,
                     HoraInicio = _horarioSeleccionado.HoraInicio,
-                    HoraFin = _horarioSeleccionado.HoraFin,
-                    IdEmpleado = _empleadoId,
-                    
+                    HoraFin = HoraFin,
+                    IdEmpleado = _empleado.IdEmpleado,
+                    IdCliente = UserService.Instance.CurrentIdUser,
                     Servicios = ServiciosSeleccionados.Select(s => new ReservaServicioDTO { IdServicio = s.IdServicio }).ToList()
                 };
 
-                var resultado = await _apiService.PostAsync<ReservaDTO, HttpResponseMessage>("api/Reserva/CrearReserva", reserva);
+                var reservaCreada = await _apiService.PostAsync<ReservaDTO, ReservaDTO>("api/Reserva", reserva);
 
-                if (resultado.IsSuccessStatusCode)
+                if (reservaCreada != null)
                 {
                     await Application.Current.MainPage.DisplayAlert("Reserva Confirmada", "Tu reserva ha sido realizada con éxito.", "OK");
-                    await Application.Current.MainPage.Navigation.PopToRootAsync();
+                    // Navegar a otra página si es necesario
                 }
                 else
                 {
-                    var mensaje = await resultado.Content.ReadAsStringAsync();
-                    await Application.Current.MainPage.DisplayAlert("Error", $"Error al confirmar la reserva: {mensaje}", "OK");
+                    await Application.Current.MainPage.DisplayAlert("Error", "No se pudo confirmar la reserva. Por favor, intenta nuevamente.", "OK");
                 }
             }
             catch (Exception ex)
@@ -71,6 +74,7 @@ namespace ProyectoO.ViewModels
                 await Application.Current.MainPage.DisplayAlert("Error", $"Error al confirmar la reserva: {ex.Message}", "OK");
             }
         }
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;

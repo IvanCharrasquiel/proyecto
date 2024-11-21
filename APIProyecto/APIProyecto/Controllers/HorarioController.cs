@@ -23,94 +23,92 @@ namespace APIProyecto.Controllers
         }
 
         /// <summary>
-        /// Obtiene los horarios disponibles para un empleado en una fecha específica.
+        /// Obtiene los horarios disponibles para un empleado en una fecha específica, considerando la duración total de los servicios.
         /// </summary>
         /// <param name="idEmpleado">ID del empleado.</param>
         /// <param name="fecha">Fecha para la cual se buscan horarios.</param>
+        /// <param name="duracionTotal">Duración total requerida en minutos.</param>
         /// <returns>Lista de horarios disponibles.</returns>
         [HttpGet("Disponibilidad")]
-        public async Task<ActionResult<IEnumerable<HorarioDisponibleDTO>>> GetHorariosDisponibles(int idEmpleado, DateTime fecha)
+        public async Task<ActionResult<IEnumerable<HorarioDisponibleDTO>>> GetHorariosDisponibles(int idEmpleado, DateTime fecha, int duracionTotal)
         {
             // Validar horarios asignados al empleado
             var horariosAsignados = await _context.Empleadohorarios
                 .Where(eh => eh.IdEmpleado == idEmpleado &&
-                             eh.FechaInicio <= fecha &&
-                             (eh.FechaFin == null || eh.FechaFin >= fecha) &&
+                             eh.FechaInicio.Date <= fecha.Date &&
+                             (eh.FechaFin == null || eh.FechaFin >= fecha.Date) &&
                              eh.Disponible == true)
                 .Include(eh => eh.IdHorarioNavigation)
                 .ToListAsync();
 
-            if (!horariosAsignados.Any())
+            
+
+            if (horariosAsignados == null || horariosAsignados.Count == 0)
             {
                 return NotFound("No hay horarios asignados para este empleado en la fecha seleccionada.");
             }
 
             // Obtener todas las reservas para el empleado en la fecha
             var reservas = await _context.Reservas
-                .Where(r => r.IdEmpleado == idEmpleado && r.Fecha == fecha.Date)
+                .Where(r => r.IdEmpleado == idEmpleado && r.Fecha.Date == fecha.Date)
                 .ToListAsync();
 
             var horariosDisponibles = new List<HorarioDisponibleDTO>();
 
-            // Generar bloques de 30 minutos dentro de cada horario asignado
+            // Generar bloques disponibles considerando la duración total
             foreach (var horario in horariosAsignados)
             {
                 var horaInicio = horario.IdHorarioNavigation.HoraInicio;
                 var horaFin = horario.IdHorarioNavigation.HoraFin;
 
-                while (horaInicio < horaFin)
-                {
-                    var bloqueFin = horaInicio.Add(TimeSpan.FromMinutes(30));
+                var bloquesHorario = GenerarBloquesHorario(horaInicio, horaFin, duracionTotal);
 
+                foreach (var bloque in bloquesHorario)
+                {
                     // Verificar si el bloque está reservado
                     var reservado = reservas.Any(r =>
-                        (r.HoraInicio >= horaInicio && r.HoraInicio < bloqueFin) || // Inicio dentro del bloque
-                        (r.HoraFin > horaInicio && r.HoraFin <= bloqueFin) ||       // Fin dentro del bloque
-                        (r.HoraInicio <= horaInicio && r.HoraFin >= bloqueFin));   // Bloque englobado
+                        (r.HoraInicio < bloque.Fin && r.HoraFin > bloque.Inicio));
 
                     if (!reservado)
                     {
                         horariosDisponibles.Add(new HorarioDisponibleDTO
                         {
-                            HoraInicio = horaInicio,
-                            HoraFin = bloqueFin,
+                            HoraInicio = bloque.Inicio,
+                            HoraFin = bloque.Fin,
                             Disponible = true
                         });
                     }
-
-                    horaInicio = bloqueFin; // Avanzar al siguiente bloque
                 }
             }
 
             if (!horariosDisponibles.Any())
             {
-                return NotFound("No hay horarios disponibles para este empleado en la fecha seleccionada.");
+                return NotFound("No hay horarios disponibles para este empleado en la fecha seleccionada que puedan acomodar la duración requerida.");
             }
 
             return Ok(horariosDisponibles);
         }
 
-
-        // Método auxiliar para dividir horarios en bloques
-        private List<(TimeSpan Inicio, TimeSpan Fin)> GenerarBloquesHorario(TimeSpan horaInicio, TimeSpan horaFin)
+        // Método auxiliar para generar bloques considerando la duración total
+        private List<(TimeSpan Inicio, TimeSpan Fin)> GenerarBloquesHorario(TimeSpan horaInicio, TimeSpan horaFin, int duracionTotal)
         {
             var bloques = new List<(TimeSpan Inicio, TimeSpan Fin)>();
+
+            var tiempoDuracion = TimeSpan.FromMinutes(duracionTotal);
             var bloqueInicio = horaInicio;
 
-            while (bloqueInicio < horaFin)
+            while (bloqueInicio + tiempoDuracion <= horaFin)
             {
-                var bloqueFin = bloqueInicio + TimeSpan.FromMinutes(30); // Bloques de 30 minutos
-                if (bloqueFin > horaFin)
-                {
-                    bloqueFin = horaFin;
-                }
+                var bloqueFin = bloqueInicio + tiempoDuracion;
+
                 bloques.Add((bloqueInicio, bloqueFin));
-                bloqueInicio = bloqueFin;
+
+                // Avanzar en intervalos de 30 minutos
+                bloqueInicio = bloqueInicio.Add(TimeSpan.FromMinutes(30));
             }
 
             return bloques;
         }
-
 
         [HttpGet("HorariosAsignados")]
         public async Task<ActionResult<IEnumerable<EmpleadoHorarioDTO>>> GetHorariosAsignados(int idEmpleado, DateTime fecha)

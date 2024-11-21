@@ -332,6 +332,69 @@ namespace APIProyecto.Controllers
             return Ok(reservas);
         }
 
+        // GET: api/Cliente/{id}/HistorialServicios
+        [HttpGet("{id}/HistorialServicios")]
+        [Authorize(Roles = "Cliente")]
+        public async Task<ActionResult<IEnumerable<ServicioRealizadoDTO>>> GetHistorialServicios(int id)
+        {
+            // Validar que el cliente es el dueño del perfil
+            var emailCliente = User.FindFirstValue(ClaimTypes.Email);
+            var cliente = await _context.Clientes
+                .Include(c => c.IdPersonaNavigation)
+                .FirstOrDefaultAsync(c => c.IdCliente == id && c.IdPersonaNavigation.Email == emailCliente);
 
+            if (cliente == null)
+                return Unauthorized("No tienes permiso para ver esta información.");
+
+            var serviciosRealizados = await _context.Reservas
+                .Where(r => r.IdCliente == id && r.EstadoReserva != "Cancelada")
+                .Include(r => r.Servicioreservas)
+                    .ThenInclude(sr => sr.IdServicioNavigation)
+                .Include(r => r.IdEmpleadoNavigation)
+                    .ThenInclude(e => e.IdPersonaNavigation)
+                .SelectMany(r => r.Servicioreservas.Select(sr => new ServicioRealizadoDTO
+                {
+                    Fecha = r.Fecha,
+                    NombreServicio = sr.IdServicioNavigation.NombreServicio,
+                    Precio = sr.IdServicioNavigation.Precio,
+                    HoraInicio = r.HoraInicio,
+                    HoraFin = r.HoraFin,
+                    Empleado = r.IdEmpleadoNavigation.IdPersonaNavigation.Nombre + " " + r.IdEmpleadoNavigation.IdPersonaNavigation.Apellido
+                }))
+                .ToListAsync();
+
+            return Ok(serviciosRealizados);
+        }
+
+        // GET: api/Cliente/{id}/HistorialPagos
+        [HttpGet("{id}/HistorialPagos")]
+        [Authorize(Roles = "Cliente")]
+        public async Task<ActionResult<IEnumerable<PagoDTO>>> GetHistorialPagos(int id)
+        {
+            // Validar que el cliente es el dueño del perfil
+            var emailCliente = User.FindFirstValue(ClaimTypes.Email);
+            var cliente = await _context.Clientes
+                .Include(c => c.IdPersonaNavigation)
+                .FirstOrDefaultAsync(c => c.IdCliente == id && c.IdPersonaNavigation.Email == emailCliente);
+
+            if (cliente == null)
+                return Unauthorized("No tienes permiso para ver esta información.");
+
+            var pagos = await _context.Pagos
+                .Include(p => p.IdFacturaNavigation)
+                .Where(p => p.IdFacturaNavigation.IdCliente == id)
+                .Select(p => new PagoDTO
+                {
+                    IdPago = p.IdPago,
+                    Monto = p.Monto,
+                    FechaPago = p.FechaPago ?? DateTime.Now,
+                    Estado = p.Estado,
+                    IdMetodoPago = p.IdMetodoPago,
+                    IdFactura = p.IdFactura
+                })
+                .ToListAsync();
+
+            return Ok(pagos);
+        }
     }
 }

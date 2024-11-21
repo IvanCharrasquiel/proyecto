@@ -1,114 +1,90 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/DetalleFacturaController.cs
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIProyecto.DTO;
 using APIProyecto.Models;
+using System.Threading.Tasks;
 
-[Route("api/[controller]")]
-[ApiController]
-public class DetalleFacturaController : ControllerBase
+namespace APIProyecto.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public DetalleFacturaController(AppDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class DetalleFacturaController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    // GET: api/DetalleFactura
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<DetalleFacturaDTO>>> GetDetalleFacturas()
-    {
-        var detalleFacturas = await _context.Detallefacturas
-            .Select(d => new DetalleFacturaDTO
+        public DetalleFacturaController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        // POST: api/DetalleFactura
+        [HttpPost]
+        public async Task<IActionResult> CrearDetalleFactura([FromBody] DetalleFacturaDTO detalleDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var detalle = new Detallefactura
             {
-                IdDetalleFactura = d.IdDetalleFactura,
-                Subtotal = d.Subtotal,
-                PrecioServicio = d.PrecioServicio,
-                CantidadServicio = d.CantidadServicio,
-                IdFactura = d.IdFactura,
-                IdServicioReserva = d.IdServicioReserva
-            })
-            .ToListAsync();
+                PrecioServicio = detalleDto.PrecioServicio,
+                CantidadServicio = detalleDto.CantidadServicio,
+                Subtotal = detalleDto.Subtotal,
+                IdFactura = detalleDto.IdFactura,
+                IdServicioReserva = detalleDto.IdServicioReserva
+            };
 
-        return Ok(detalleFacturas);
-    }
+            _context.Detallefacturas.Add(detalle);
+            await _context.SaveChangesAsync();
 
-    // GET: api/DetalleFactura/{id}
-    [HttpGet("{id}")]
-    public async Task<ActionResult<DetalleFacturaDTO>> GetDetalleFactura(int id)
-    {
-        var detalleFactura = await _context.Detallefacturas.FindAsync(id);
-        if (detalleFactura == null)
-            return NotFound();
+            detalleDto.IdDetalleFactura = detalle.IdDetalleFactura;
 
-        var detalleFacturaDTO = new DetalleFacturaDTO
+            return CreatedAtAction(nameof(GetDetalleFactura), new { id = detalle.IdDetalleFactura }, detalleDto);
+        }
+
+        // GET: api/DetalleFactura/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<DetalleFacturaDTO>> GetDetalleFactura(int id)
         {
-            IdDetalleFactura = detalleFactura.IdDetalleFactura,
-            Subtotal = detalleFactura.Subtotal,
-            PrecioServicio = detalleFactura.PrecioServicio,
-            CantidadServicio = detalleFactura.CantidadServicio,
-            IdFactura = detalleFactura.IdFactura,
-            IdServicioReserva = detalleFactura.IdServicioReserva
-        };
+            var detalle = await _context.Detallefacturas.FindAsync(id);
 
-        return Ok(detalleFacturaDTO);
-    }
+            if (detalle == null)
+                return NotFound();
 
-    // POST: api/DetalleFactura
-    [HttpPost]
-    public async Task<ActionResult<DetalleFacturaDTO>> PostDetalleFactura(DetalleFacturaDTO detalleFacturaDTO)
-    {
-        var detalleFactura = new Detallefactura
+            var detalleDto = new DetalleFacturaDTO
+            {
+                IdDetalleFactura = detalle.IdDetalleFactura,
+                PrecioServicio = detalle.PrecioServicio,
+                CantidadServicio = detalle.CantidadServicio,
+                Subtotal = detalle.Subtotal,
+                IdFactura = detalle.IdFactura,
+                IdServicioReserva = detalle.IdServicioReserva
+            };
+
+            return Ok(detalleDto);
+        }
+
+        // PUT: api/DetalleFactura/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActualizarDetalleFactura(int id, [FromBody] DetalleFacturaDTO detalleDto)
         {
-            Subtotal = detalleFacturaDTO.Subtotal,
-            PrecioServicio = detalleFacturaDTO.PrecioServicio,
-            CantidadServicio = detalleFacturaDTO.CantidadServicio,
-            IdFactura = detalleFacturaDTO.IdFactura,
-            IdServicioReserva = detalleFacturaDTO.IdServicioReserva
-        };
+            if (id != detalleDto.IdDetalleFactura)
+                return BadRequest();
 
-        _context.Detallefacturas.Add(detalleFactura);
-        await _context.SaveChangesAsync();
+            var detalle = await _context.Detallefacturas.FindAsync(id);
+            if (detalle == null)
+                return NotFound();
 
-        detalleFacturaDTO.IdDetalleFactura = detalleFactura.IdDetalleFactura;
+            detalle.PrecioServicio = detalleDto.PrecioServicio;
+            detalle.CantidadServicio = detalleDto.CantidadServicio;
+            detalle.Subtotal = detalleDto.Subtotal;
+            detalle.IdFactura = detalleDto.IdFactura;
+            detalle.IdServicioReserva = detalleDto.IdServicioReserva;
 
-        return CreatedAtAction(nameof(GetDetalleFactura), new { id = detalleFactura.IdDetalleFactura }, detalleFacturaDTO);
-    }
+            _context.Entry(detalle).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-    // PUT: api/DetalleFactura/{id}
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutDetalleFactura(int id, DetalleFacturaDTO detalleFacturaDTO)
-    {
-        if (id != detalleFacturaDTO.IdDetalleFactura)
-            return BadRequest();
-
-        var detalleFactura = await _context.Detallefacturas.FindAsync(id);
-        if (detalleFactura == null)
-            return NotFound();
-
-        detalleFactura.Subtotal = detalleFacturaDTO.Subtotal;
-        detalleFactura.PrecioServicio = detalleFacturaDTO.PrecioServicio;
-        detalleFactura.CantidadServicio = detalleFacturaDTO.CantidadServicio;
-        detalleFactura.IdFactura = detalleFacturaDTO.IdFactura;
-        detalleFactura.IdServicioReserva = detalleFacturaDTO.IdServicioReserva;
-
-        _context.Entry(detalleFactura).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    // DELETE: api/DetalleFactura/{id}
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteDetalleFactura(int id)
-    {
-        var detalleFactura = await _context.Detallefacturas.FindAsync(id);
-        if (detalleFactura == null)
-            return NotFound();
-
-        _context.Detallefacturas.Remove(detalleFactura);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+            return NoContent();
+        }
     }
 }

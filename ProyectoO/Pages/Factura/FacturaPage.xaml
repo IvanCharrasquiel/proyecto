@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="ProyectoO.Pages.Factura.FacturaPage"
+             Title="Factura">
+    <ScrollView>
+        <StackLayout Padding="20" Spacing="15">
+            <Label Text="Factura" FontAttributes="Bold" FontSize="Large" HorizontalOptions="Center" />
+
+            <Label Text="Número de Documento:" FontAttributes="Bold" />
+            <Label Text="{Binding Factura.NumeroDocumento}" />
+
+            <Label Text="Fecha de Emisión:" FontAttributes="Bold" />
+            <Label Text="{Binding Factura.FechaEmision, StringFormat='{0:dd/MM/yyyy}'}" />
+
+            <Label Text="Estado:" FontAttributes="Bold" />
+            <Label Text="{Binding Factura.Estado}" />
+
+            <Label Text="Servicios:" FontAttributes="Bold" />
+            <CollectionView ItemsSource="{Binding Factura.Detalles}">
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <StackLayout Padding="5">
+                            <Label Text="{Binding NombreServicio}" FontAttributes="Bold" />
+                            <Label Text="{Binding PrecioServicio, StringFormat='Precio: {0:C}'}" />
+                            <Label Text="{Binding CantidadServicio, StringFormat='Cantidad: {0}'}" />
+                            <Label Text="{Binding Subtotal, StringFormat='Subtotal: {0:C}'}" />
+                        </StackLayout>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+            <Label Text="{Binding Factura.MontoTotal, StringFormat='Total: {0:C}'}" FontAttributes="Bold" FontSize="Large" HorizontalOptions="Center" />
+
+            <!-- Botón para Pagar la Factura -->
+            <Button Text="Pagar Factura" Command="{Binding PagarFacturaCommand}" BackgroundColor="Green" TextColor="White" IsVisible="{Binding MostrarBotonPagar}" />
+        </StackLayout>
+    </ScrollView>
+</ContentPage>

@@ -1,17 +1,15 @@
-﻿using APIProyecto.DTO;
-using APIProyecto.Models;
-using Microsoft.AspNetCore.Authorization;
+﻿// Controllers/ReservaController.cs
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using System;
-using System.Linq;
+using APIProyecto.DTO;
+using APIProyecto.Models;
+using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
-using System.Threading.Tasks;
 
-namespace ProyectoPeluqueria.Controllers
+namespace APIProyecto.Controllers
 {
-    [Route("api/[controller]")]
     [ApiController]
+    [Route("api/[controller]")]
     public class ReservaController : ControllerBase
     {
         private readonly AppDbContext _context;
@@ -21,150 +19,243 @@ namespace ProyectoPeluqueria.Controllers
             _context = context;
         }
 
-        /// <summary>
-        /// Crea una nueva reserva.
-        /// </summary>
-        /// <param name="reservaInputDTO">Datos de la reserva.</param>
-        /// <returns>Resultado de la operación.</returns>
-        [HttpPost("CrearReserva")]
-        [Authorize] // Asegura que el usuario esté autenticado
-        public async Task<ActionResult<ReservaDTO>> CrearReserva([FromBody] ReservaInputDTO reservaInputDTO)
+        // POST: api/Reserva
+        [HttpPost]
+        public async Task<IActionResult> CrearReserva([FromBody] ReservaDTO reservaDto)
         {
-            if (reservaInputDTO == null)
-            {
-                return BadRequest("Datos de reserva inválidos.");
-            }
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
 
-            // Obtener el email del usuario autenticado
-            var emailClaim = User.FindFirst(ClaimTypes.Email);
-            if (emailClaim == null)
-            {
-                return Unauthorized("El usuario no está autenticado.");
-            }
+            // Verificar si el cliente existe en la base de datos
+            var cliente = await _context.Clientes
+                .Include(c => c.IdPersonaNavigation)
+                .FirstOrDefaultAsync(c => c.IdCliente == reservaDto.IdCliente);
 
-            var email = emailClaim.Value;
-
-            // Buscar la persona en la base de datos usando el email
-            var persona = await _context.Personas.FirstOrDefaultAsync(p => p.Email == email);
-            if (persona == null)
-            {
-                return Unauthorized("El usuario no está registrado.");
-            }
-
-            // Verificar si la persona es un cliente
-            var cliente = await _context.Clientes.FirstOrDefaultAsync(c => c.IdPersona == persona.IdPersona);
             if (cliente == null)
-            {
-                return Unauthorized("Solo los clientes pueden realizar reservas.");
-            }
+                return NotFound(new { Message = "Cliente no encontrado." });
 
-            // Validar servicios seleccionados
-            if (reservaInputDTO.Servicios == null || !reservaInputDTO.Servicios.Any())
-            {
-                return BadRequest("Debe seleccionar al menos un servicio.");
-            }
-
-            var servicios = await _context.Servicios
-                .Where(s => reservaInputDTO.Servicios.Contains(s.IdServicio))
+            // Validar disponibilidad del empleado en el horario seleccionado
+            var reservasExistentes = await _context.Reservas
+                .Where(r => r.IdEmpleado == reservaDto.IdEmpleado && r.Fecha == reservaDto.Fecha)
                 .ToListAsync();
 
-            if (servicios.Count != reservaInputDTO.Servicios.Count)
-            {
-                return NotFound("Uno o más servicios no encontrados.");
-            }
+            bool hayConflicto = reservasExistentes.Any(r =>
+                (reservaDto.HoraInicio >= r.HoraInicio && reservaDto.HoraInicio < r.HoraFin) ||
+                (reservaDto.HoraFin > r.HoraInicio && reservaDto.HoraFin <= r.HoraFin));
 
-            // Calcular la duración total de los servicios seleccionados
-            int duracionTotal = servicios.Sum(s => s.Duracion);
+            if (hayConflicto)
+                return BadRequest(new { Message = "El horario seleccionado no está disponible." });
 
-            // Calcular la hora de finalización en base a la hora de inicio y la duración total
-            if (!reservaInputDTO.HoraInicio.HasValue)
-            {
-                return BadRequest("Debe proporcionar una hora de inicio.");
-            }
-
-            var horaInicio = reservaInputDTO.HoraInicio.Value;
-            var horaFinCalculada = horaInicio + TimeSpan.FromMinutes(duracionTotal);
-
-            // Determinar el día de la semana (1=Lunes, ..., 7=Domingo)
-            var diaSemana = ((int)reservaInputDTO.Fecha.DayOfWeek == 0) ? 7 : (int)reservaInputDTO.Fecha.DayOfWeek;
-
-            // Verificar disponibilidad del empleado en el horario seleccionado
-            var conflicto = await _context.Reservas
-                .AnyAsync(r => r.IdEmpleado == reservaInputDTO.IdEmpleado &&
-                               r.Fecha.Date == reservaInputDTO.Fecha.Date &&
-                               r.HoraInicio < horaFinCalculada &&
-                               r.HoraFin > horaInicio &&
-                               r.EstadoReserva != "Cancelada");
-
-            if (conflicto)
-            {
-                return BadRequest("El horario seleccionado no está disponible.");
-            }
-
-            // Verificar que el horario está dentro de los horarios de atención del empleado
-            var horariosEmpleado = await _context.Empleadohorarios
-                .Include(eh => eh.IdHorarioNavigation)
-                .Where(eh => eh.IdEmpleado == reservaInputDTO.IdEmpleado &&
-                             eh.DiaSemana == diaSemana &&
-                             eh.FechaInicio.Date <= reservaInputDTO.Fecha.Date &&
-                             (eh.FechaFin == null || eh.FechaFin.Value.Date >= reservaInputDTO.Fecha.Date) &&
-                             eh.Disponible)
-                .ToListAsync();
-
-            if (!horariosEmpleado.Any())
-            {
-                return BadRequest("El empleado no tiene horarios disponibles en la fecha seleccionada.");
-            }
-
-            bool dentroHorarioAtencion = horariosEmpleado.Any(eh =>
-                horaInicio >= eh.IdHorarioNavigation.HoraInicio &&
-                horaFinCalculada <= eh.IdHorarioNavigation.HoraFin
-            );
-
-            if (!dentroHorarioAtencion)
-            {
-                return BadRequest("El horario seleccionado está fuera del horario de atención del empleado.");
-            }
-
+            
             // Crear la reserva
-            var nuevaReserva = new Reserva
+            var reserva = new Reserva
             {
-                Fecha = reservaInputDTO.Fecha.Date,
-                HoraInicio = horaInicio,
-                HoraFin = horaFinCalculada,
-                IdCliente = cliente.IdCliente,
-                IdEmpleado = reservaInputDTO.IdEmpleado,
-                EstadoReserva = reservaInputDTO.EstadoReserva ?? "Pendiente"
+                Fecha = reservaDto.Fecha,
+                HoraInicio = reservaDto.HoraInicio,
+                HoraFin = reservaDto.HoraFin,
+                IdCliente = reservaDto.IdCliente,
+                IdEmpleado = reservaDto.IdEmpleado,
+                EstadoReserva = "Pendiente"
             };
 
-            _context.Reservas.Add(nuevaReserva);
+            _context.Reservas.Add(reserva);
             await _context.SaveChangesAsync();
 
-            // Asociar los servicios a la reserva
-            var servicioReservas = reservaInputDTO.Servicios.Select(idServicio => new Servicioreserva
+            // Asociar servicios a la reserva
+            foreach (var idServicio in reservaDto.IdServicios)
             {
-                IdReserva = nuevaReserva.IdReserva,
-                IdServicio = idServicio
-            });
+                _context.Servicioreservas.Add(new Servicioreserva
+                {
+                    IdReserva = reserva.IdReserva,
+                    IdServicio = idServicio
+                });
+                await _context.SaveChangesAsync();
+            }
 
-            _context.Servicioreservas.AddRange(servicioReservas);
-            await _context.SaveChangesAsync();
-
-            // Devolver la reserva creada en formato ReservaDTO
-            var reservaDTO = new ReservaDTO
-            {
-                IdReserva = nuevaReserva.IdReserva,
-                Fecha = nuevaReserva.Fecha,
-                HoraInicio = nuevaReserva.HoraInicio,
-                HoraFin = nuevaReserva.HoraFin,
-                IdEmpleado = nuevaReserva.IdEmpleado,
-                EstadoReserva = nuevaReserva.EstadoReserva,
-                Servicios = reservaInputDTO.Servicios
-            };
-
-            return CreatedAtAction(nameof(CrearReserva), new { id = nuevaReserva.IdReserva }, reservaDTO);
+            return Ok(new { Message = "Reserva creada exitosamente." });
         }
 
-        // Otros métodos del controlador (ObtenerReservasPorCliente, CancelarReserva, etc.) pueden añadirse aquí
+
+        // GET: api/Reserva/Cliente/{idCliente}
+        [HttpGet("Cliente/{idCliente}")]
+        public async Task<ActionResult<IEnumerable<ReservaDTO>>> GetReservasPorCliente(int idCliente)
+        {
+            // Validar que el cliente es el dueño del perfil
+            var emailCliente = User.FindFirstValue(ClaimTypes.Email);
+            var cliente = await _context.Clientes
+                .Include(c => c.IdPersonaNavigation)
+                .FirstOrDefaultAsync(c => c.IdCliente == idCliente && c.IdPersonaNavigation.Email == emailCliente);
+
+            if (cliente == null)
+                return Unauthorized("No tienes permiso para ver esta información.");
+
+            var reservas = await _context.Reservas
+                .Where(r => r.IdCliente == idCliente)
+                .Include(r => r.Servicioreservas)
+                    .ThenInclude(sr => sr.IdServicioNavigation)
+                .Include(r => r.IdEmpleadoNavigation)
+                    .ThenInclude(e => e.IdPersonaNavigation)
+                .Select(r => new ReservaDTO
+                {
+                    IdReserva = r.IdReserva,
+                    Fecha = r.Fecha,
+                    HoraInicio = r.HoraInicio,
+                    HoraFin = r.HoraFin,
+                    EstadoReserva = r.EstadoReserva,
+                    IdEmpleado = r.IdEmpleado,
+                    IdServicios = r.Servicioreservas.Select(sr => sr.IdServicio).ToList()
+                })
+                .ToListAsync();
+
+            return Ok(reservas);
+        }
+
+        // GET: api/Reserva/{idReserva}
+        [HttpGet("{idReserva}")]
+        public async Task<ActionResult<ReservaDTO>> GetReserva(int idReserva)
+        {
+            var reserva = await _context.Reservas
+                .Include(r => r.Servicioreservas)
+                    .ThenInclude(sr => sr.IdServicioNavigation)
+                .Include(r => r.IdEmpleadoNavigation)
+                    .ThenInclude(e => e.IdPersonaNavigation)
+                .FirstOrDefaultAsync(r => r.IdReserva == idReserva);
+
+            if (reserva == null)
+                return NotFound("Reserva no encontrada.");
+
+            var reservaDto = new ReservaDTO
+            {
+                IdReserva = reserva.IdReserva,
+                Fecha = reserva.Fecha,
+                HoraInicio = reserva.HoraInicio,
+                HoraFin = reserva.HoraFin,
+                EstadoReserva = reserva.EstadoReserva,
+                IdEmpleado = reserva.IdEmpleado,
+                IdServicios = reserva.Servicioreservas.Select(sr => sr.IdServicio).ToList()
+            };
+
+            return Ok(reservaDto);
+        }
+
+        // PUT: api/Reserva/Cancelar/{idReserva}
+        [HttpPut("Cancelar/{idReserva}")]
+        public async Task<IActionResult> CancelarReserva(int idReserva)
+        {
+            var reserva = await _context.Reservas.FindAsync(idReserva);
+            if (reserva == null)
+                return NotFound("Reserva no encontrada.");
+
+            // Validar que el usuario tiene permiso para cancelar la reserva
+            var emailUsuario = User.FindFirstValue(ClaimTypes.Email);
+            var rolUsuario = User.FindFirstValue(ClaimTypes.Role);
+
+            if (rolUsuario == "Cliente")
+            {
+                var cliente = await _context.Clientes
+                    .Include(c => c.IdPersonaNavigation)
+                    .FirstOrDefaultAsync(c => c.IdCliente == reserva.IdCliente && c.IdPersonaNavigation.Email == emailUsuario);
+
+                if (cliente == null)
+                    return Unauthorized("No tienes permiso para cancelar esta reserva.");
+            }
+            else if (rolUsuario == "Empleado")
+            {
+                var empleado = await _context.Empleados
+                    .Include(e => e.IdPersonaNavigation)
+                    .FirstOrDefaultAsync(e => e.IdEmpleado == reserva.IdEmpleado && e.IdPersonaNavigation.Email == emailUsuario);
+
+                if (empleado == null)
+                    return Unauthorized("No tienes permiso para cancelar esta reserva.");
+            }
+
+            reserva.EstadoReserva = "Cancelada";
+            _context.Entry(reserva).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Reserva cancelada exitosamente." });
+        }
+
+
+
+        [HttpPost("Confirmar/{idReserva}")]
+        public async Task<IActionResult> ConfirmarReserva(int idReserva)
+        {
+            var reserva = await _context.Reservas
+                .Include(r => r.Servicioreservas)
+                    .ThenInclude(sr => sr.IdServicioNavigation)
+                .FirstOrDefaultAsync(r => r.IdReserva == idReserva);
+
+            if (reserva == null)
+                return NotFound("Reserva no encontrada.");
+
+            if (reserva.EstadoReserva != "Pendiente")
+                return BadRequest("La reserva ya ha sido confirmada o cancelada.");
+
+            // Calcular el monto total y aplicar promociones
+            decimal montoTotal = 0;
+            foreach (var sr in reserva.Servicioreservas)
+            {
+                var servicio = sr.IdServicioNavigation;
+                decimal precioServicio = servicio.Precio;
+
+                // Aplicar promociones
+                var promocion = await _context.Promocions
+                    .FirstOrDefaultAsync(p => p.IdServicio == servicio.IdServicio && p.Estado == "Activa");
+
+                if (promocion != null)
+                {
+                    decimal descuento = promocion.Descuento ?? 0;
+                    precioServicio -= (precioServicio * descuento / 100);
+                }
+
+                montoTotal += precioServicio;
+
+                // Crear detalle de factura
+                var detalleFactura = new Detallefactura
+                {
+                    PrecioServicio = precioServicio,
+                    CantidadServicio = 1,
+                    Subtotal = precioServicio,
+                    IdServicioReserva = sr.IdServicioReserva
+                };
+
+                _context.Detallefacturas.Add(detalleFactura);
+            }
+
+            // Generar número de documento (simplemente incrementamos el último número)
+            var ultimoNumero = await _context.Numerodocumentos.OrderByDescending(nd => nd.IdNumeroDocumento).FirstOrDefaultAsync();
+            int nuevoNumero = (ultimoNumero?.UltimoNumero ?? 0) + 1;
+
+            var numeroDocumento = $"FAC-{nuevoNumero:D6}";
+
+            // Crear la factura
+            var factura = new Factura
+            {
+                NumeroDocumento = numeroDocumento,
+                FechaEmision = DateTime.Now,
+                MontoTotal = montoTotal,
+                Estado = "Pendiente de Pago",
+                IdReserva = reserva.IdReserva,
+                IdCliente = reserva.IdCliente
+            };
+
+            _context.Facturas.Add(factura);
+
+            // Actualizar el último número de documento
+            var nuevoNumeroDocumento = new Numerodocumento
+            {
+                UltimoNumero = nuevoNumero,
+                FechaRegistro = DateOnly.FromDateTime(DateTime.Now)
+            };
+            _context.Numerodocumentos.Add(nuevoNumeroDocumento);
+
+            reserva.EstadoReserva = "Confirmada";
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { Message = "Reserva confirmada y factura generada exitosamente." });
+        }
+
     }
 }

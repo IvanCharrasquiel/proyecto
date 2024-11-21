@@ -11,9 +11,10 @@ namespace ProyectoO.ViewModels
 {
     public class SeleccionarFechaViewModel : INotifyPropertyChanged
     {
-        private readonly int _empleadoId;
+        private readonly EmpleadoDTO _empleado;
         private readonly ApiService _apiService;
         private readonly AuthService _authService;
+        private readonly int _servicioPreSeleccionadoId;
 
         private DateTime _fechaSeleccionada;
         public DateTime FechaSeleccionada
@@ -23,13 +24,13 @@ namespace ProyectoO.ViewModels
             {
                 if (_fechaSeleccionada != value)
                 {
-                    _ = CargarHorarios(value); 
-                    
+                    _fechaSeleccionada = value;
+                    OnPropertyChanged(nameof(FechaSeleccionada));
+                    _ = CargarHorarios(_fechaSeleccionada);
                 }
-
             }
         }
-        public ObservableCollection<HorarioDisponibleDTO> HorariosDisponibles { get; }
+        public ObservableCollection<HorarioDisponibleDTO> HorariosDisponibles { get; } = new ObservableCollection<HorarioDisponibleDTO>();
 
         private HorarioDisponibleDTO _horarioSeleccionado;
         public HorarioDisponibleDTO HorarioSeleccionado
@@ -41,7 +42,7 @@ namespace ProyectoO.ViewModels
                 {
                     _horarioSeleccionado = value;
                     OnPropertyChanged(nameof(HorarioSeleccionado));
-                    PuedeContinuar = true;
+                    PuedeContinuar = _horarioSeleccionado != null;
                     OnPropertyChanged(nameof(PuedeContinuar));
                 }
             }
@@ -64,24 +65,25 @@ namespace ProyectoO.ViewModels
 
         public ICommand ContinuarCommand { get; }
 
-        public SeleccionarFechaViewModel(DateTime fechaSeleccionada, int empleadoId, ApiService apiService, int servicioPreSeleccionadoId, AuthService authService)
+        public SeleccionarFechaViewModel(DateTime fechaSeleccionada, EmpleadoDTO empleado, ApiService apiService, int servicioPreSeleccionadoId, AuthService authService)
         {
             _fechaSeleccionada = fechaSeleccionada;
-            _empleadoId = empleadoId;
+            _empleado = empleado;
             _apiService = apiService;
             _authService = authService;
+            _servicioPreSeleccionadoId = servicioPreSeleccionadoId;
 
-            HorariosDisponibles = new ObservableCollection<HorarioDisponibleDTO>();
             ContinuarCommand = new Command(() =>
             {
-                var seleccionarServiciosPage = new SeleccionarServiciosPage(_fechaSeleccionada, _empleadoId, _apiService, HorarioSeleccionado, servicioPreSeleccionadoId, _authService);
+                var seleccionarServiciosPage = new SeleccionarServiciosPage(_fechaSeleccionada, _empleado, _apiService, HorarioSeleccionado, _servicioPreSeleccionadoId, _authService);
                 NavigationToPage(seleccionarServiciosPage);
             });
 
-            // Inicialmente, deshabilitar el botón
             PuedeContinuar = false;
+
+            _ = CargarHorarios(_fechaSeleccionada);
         }
-        
+
 
 
         public static void NavigationToPage(ContentPage nuevaPagina)
@@ -95,17 +97,29 @@ namespace ProyectoO.ViewModels
 
         private async Task CargarHorarios(DateTime fecha)
         {
-            var horarios = await _apiService.GetAsync<List<HorarioDisponibleDTO>>($"api/Horario/Disponibilidad?idEmpleado={_empleadoId}&fecha={fecha:yyyy-MM-dd}");
-            HorariosDisponibles.Clear();
-            foreach (var horario in horarios)
+            try
             {
-                HorariosDisponibles.Add(horario);
+                var horarios = await _apiService.GetAsync<List<HorarioDisponibleDTO>>($"api/Horario/Disponibilidad?idEmpleado={_empleado.IdEmpleado}&fecha={fecha:yyyy-MM-dd}");
+                HorariosDisponibles.Clear();
+                foreach (var horario in horarios)
+                {
+                    HorariosDisponibles.Add(horario);
+                }
+
+                if (!HorariosDisponibles.Any())
+                {
+                    await Application.Current.MainPage.DisplayAlert("Información", "No hay horarios disponibles para esta fecha.", "OK");
+                }
+            }
+            catch (Exception ex)
+            {
+                await Application.Current.MainPage.DisplayAlert("Error", $"Error al cargar horarios: {ex.Message}", "OK");
             }
         }
 
-        
 
-        
+
+
 
 
         public event PropertyChangedEventHandler PropertyChanged;

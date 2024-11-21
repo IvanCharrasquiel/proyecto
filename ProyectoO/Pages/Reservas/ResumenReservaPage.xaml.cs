@@ -7,10 +7,11 @@ namespace ProyectoO.Pages.Reservas
 {
     public partial class ResumenReservaPage : ContentPage
     {
-        public ResumenReservaPage(HorarioDisponibleDTO horarioSeleccionado, DateTime fechaSeleccionada, List<ServicioDTO> serviciosSeleccionados, int empleadoId, ApiService apiService, AuthService authService)
+        public ResumenReservaPage(HorarioDisponibleDTO horarioSeleccionado, DateTime fechaSeleccionada, List<ServicioDTO> serviciosSeleccionados, EmpleadoDTO empleado, ApiService apiService, AuthService authService)
         {
             InitializeComponent();
-            BindingContext = new ResumenReservaViewModel(horarioSeleccionado, fechaSeleccionada, serviciosSeleccionados, empleadoId, apiService, authService);
+            BindingContext = new ResumenReservaViewModel(horarioSeleccionado, fechaSeleccionada, serviciosSeleccionados, empleado, apiService, authService);
         }
     }
+
 }

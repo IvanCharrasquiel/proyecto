@@ -1,114 +1,137 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/PagoController.cs
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIProyecto.DTO;
 using APIProyecto.Models;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
-[Route("api/[controller]")]
-[ApiController]
-public class PagoController : ControllerBase
+namespace APIProyecto.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public PagoController(AppDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class PagoController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    // GET: api/Pago
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<PagoDTO>>> GetPagos()
-    {
-        var pagos = await _context.Pagos
-            .Select(p => new PagoDTO
+        public PagoController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        // POST: api/Pago
+        [HttpPost]
+        [Authorize(Roles = "Cliente")]
+        public async Task<IActionResult> RegistrarPago([FromBody] PagoDTO pagoDto)
+        {
+            // Validar el DTO
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            // Obtener el ID del cliente desde el token
+            var emailCliente = User.FindFirstValue(ClaimTypes.Email);
+            var cliente = await _context.Clientes
+                .Include(c => c.IdPersonaNavigation)
+                .FirstOrDefaultAsync(c => c.IdPersonaNavigation.Email == emailCliente);
+
+            if (cliente == null)
+                return Unauthorized("Cliente no encontrado.");
+
+            // Validar que la factura pertenece al cliente
+            var factura = await _context.Facturas
+                .FirstOrDefaultAsync(f => f.IdFactura == pagoDto.IdFactura && f.IdCliente == cliente.IdCliente);
+
+            if (factura == null)
+                return BadRequest("La factura no pertenece al cliente.");
+
+            // Crear el pago
+            var pago = new Pago
             {
-                IdPago = p.IdPago,
-                Monto = p.Monto,
-                FechaPago = p.FechaPago,
-                Estado = p.Estado,
-                IdFactura = p.IdFactura,
-                IdMetodoPago = p.IdMetodoPago
-            })
-            .ToListAsync();
+                Monto = pagoDto.Monto,
+                FechaPago = DateTime.Now,
+                Estado = "Completado",
+                IdFactura = pagoDto.IdFactura,
+                IdMetodoPago = pagoDto.IdMetodoPago
+            };
 
-        return Ok(pagos);
-    }
+            _context.Pagos.Add(pago);
+            await _context.SaveChangesAsync();
 
-    // GET: api/Pago/{id}
-    [HttpGet("{id}")]
-    public async Task<ActionResult<PagoDTO>> GetPago(int id)
-    {
-        var pago = await _context.Pagos.FindAsync(id);
-        if (pago == null)
-            return NotFound();
+            return Ok(new { Message = "Pago registrado exitosamente." });
+        }
 
-        var pagoDTO = new PagoDTO
+        // GET: api/Pago/Cliente/{idCliente}
+        [HttpGet("Cliente/{idCliente}")]
+        [Authorize(Roles = "Cliente")]
+        public async Task<ActionResult<IEnumerable<PagoDTO>>> GetPagosPorCliente(int idCliente)
         {
-            IdPago = pago.IdPago,
-            Monto = pago.Monto,
-            FechaPago = pago.FechaPago,
-            Estado = pago.Estado,
-            IdFactura = pago.IdFactura,
-            IdMetodoPago = pago.IdMetodoPago
-        };
+            // Validar que el cliente es el dueño del perfil
+            var emailCliente = User.FindFirstValue(ClaimTypes.Email);
+            var cliente = await _context.Clientes
+                .Include(c => c.IdPersonaNavigation)
+                .FirstOrDefaultAsync(c => c.IdCliente == idCliente && c.IdPersonaNavigation.Email == emailCliente);
 
-        return Ok(pagoDTO);
-    }
+            if (cliente == null)
+                return Unauthorized("No tienes permiso para ver esta información.");
 
-    // POST: api/Pago
-    [HttpPost]
-    public async Task<ActionResult<PagoDTO>> PostPago(PagoDTO pagoDTO)
-    {
-        var pago = new Pago
+            var pagos = await _context.Pagos
+                .Include(p => p.IdFacturaNavigation)
+                .Where(p => p.IdFacturaNavigation.IdCliente == idCliente)
+                .Select(p => new PagoDTO
+                {
+                    IdPago = p.IdPago,
+                    Monto = p.Monto,
+                    FechaPago = p.FechaPago ?? DateTime.Now,
+                    Estado = p.Estado,
+                    IdMetodoPago = p.IdMetodoPago,
+                    IdFactura = p.IdFactura
+                })
+                .ToListAsync();
+
+            return Ok(pagos);
+        }
+
+        // GET: api/Pago/{idPago}
+        [HttpGet("{idPago}")]
+        [Authorize(Roles = "Cliente,Empleado")]
+        public async Task<ActionResult<PagoDTO>> GetPago(int idPago)
         {
-            Monto = pagoDTO.Monto,
-            FechaPago = pagoDTO.FechaPago,
-            Estado = pagoDTO.Estado,
-            IdFactura = pagoDTO.IdFactura,
-            IdMetodoPago = pagoDTO.IdMetodoPago
-        };
+            var pago = await _context.Pagos
+                .Include(p => p.IdFacturaNavigation)
+                .FirstOrDefaultAsync(p => p.IdPago == idPago);
 
-        _context.Pagos.Add(pago);
-        await _context.SaveChangesAsync();
+            if (pago == null)
+                return NotFound("Pago no encontrado.");
 
-        pagoDTO.IdPago = pago.IdPago;
+            // Validar que el usuario tiene permiso para ver el pago
+            var emailUsuario = User.FindFirstValue(ClaimTypes.Email);
+            var rolUsuario = User.FindFirstValue(ClaimTypes.Role);
 
-        return CreatedAtAction(nameof(GetPago), new { id = pago.IdPago }, pagoDTO);
-    }
+            if (rolUsuario == "Cliente")
+            {
+                var cliente = await _context.Clientes
+                    .Include(c => c.IdPersonaNavigation)
+                    .FirstOrDefaultAsync(c => c.IdCliente == pago.IdFacturaNavigation.IdCliente && c.IdPersonaNavigation.Email == emailUsuario);
 
-    // PUT: api/Pago/{id}
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutPago(int id, PagoDTO pagoDTO)
-    {
-        if (id != pagoDTO.IdPago)
-            return BadRequest();
+                if (cliente == null)
+                    return Unauthorized("No tienes permiso para ver este pago.");
+            }
+            else if (rolUsuario == "Empleado")
+            {
+                // Los empleados pueden ver los pagos
+            }
 
-        var pago = await _context.Pagos.FindAsync(id);
-        if (pago == null)
-            return NotFound();
+            var pagoDto = new PagoDTO
+            {
+                IdPago = pago.IdPago,
+                Monto = pago.Monto,
+                FechaPago = pago.FechaPago ?? DateTime.Now,
+                Estado = pago.Estado,
+                IdMetodoPago = pago.IdMetodoPago,
+                IdFactura = pago.IdFactura
+            };
 
-        pago.Monto = pagoDTO.Monto;
-        pago.FechaPago = pagoDTO.FechaPago;
-        pago.Estado = pagoDTO.Estado;
-        pago.IdFactura = pagoDTO.IdFactura;
-        pago.IdMetodoPago = pagoDTO.IdMetodoPago;
-
-        _context.Entry(pago).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    // DELETE: api/Pago/{id}
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeletePago(int id)
-    {
-        var pago = await _context.Pagos.FindAsync(id);
-        if (pago == null)
-            return NotFound();
-
-        _context.Pagos.Remove(pago);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+            return Ok(pagoDto);
+        }
     }
 }

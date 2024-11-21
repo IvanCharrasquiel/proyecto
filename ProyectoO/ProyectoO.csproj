@@ -72,6 +72,9 @@
 	  <MauiXaml Update="Pages\Detalle.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>
+	  <MauiXaml Update="Pages\Factura\FacturaPage.xaml">
+	    <Generator>MSBuild:Compile</Generator>
+	  </MauiXaml>
 	  <MauiXaml Update="Pages\Inicial.xaml">
 	    <Generator>MSBuild:Compile</Generator>
 	  </MauiXaml>

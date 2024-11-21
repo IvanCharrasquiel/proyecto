@@ -4,6 +4,7 @@
              x:Class="ProyectoO.Pages.Registro.Registro"
              Title="Registro"
              BackgroundColor="White">
+    <ScrollView>
     <VerticalStackLayout Spacing="20" Padding="30" VerticalOptions="CenterAndExpand">
 
         <!-- Título de la página -->
@@ -138,4 +139,5 @@
             Clicked="OnRegistrarClicked"/>
 
     </VerticalStackLayout>
+    </ScrollView>
 </ContentPage>

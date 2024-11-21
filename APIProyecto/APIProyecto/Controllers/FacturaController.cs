@@ -1,114 +1,128 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿// Controllers/FacturaController.cs
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using APIProyecto.DTO;
 using APIProyecto.Models;
+using System.Linq;
+using System.Threading.Tasks;
 
-[Route("api/[controller]")]
-[ApiController]
-public class FacturaController : ControllerBase
+namespace APIProyecto.Controllers
 {
-    private readonly AppDbContext _context;
-
-    public FacturaController(AppDbContext context)
+    [ApiController]
+    [Route("api/[controller]")]
+    public class FacturaController : ControllerBase
     {
-        _context = context;
-    }
+        private readonly AppDbContext _context;
 
-    // GET: api/Factura
-    [HttpGet]
-    public async Task<ActionResult<IEnumerable<FacturaDTO>>> GetFacturas()
-    {
-        var facturas = await _context.Facturas
-            .Select(f => new FacturaDTO
+        public FacturaController(AppDbContext context)
+        {
+            _context = context;
+        }
+
+        // POST: api/Factura
+        [HttpPost]
+        public async Task<IActionResult> CrearFactura([FromBody] FacturaDTO facturaDto)
+        {
+            if (!ModelState.IsValid)
+                return BadRequest(ModelState);
+
+            var factura = new Factura
             {
-                IdFactura = f.IdFactura,
-                NumeroDocumento = f.NumeroDocumento,
-                FechaEmision = f.FechaEmision,
-                MontoTotal = f.MontoTotal,
-                Estado = f.Estado,
-                IdReserva = f.IdReserva
-            })
-            .ToListAsync();
+                NumeroDocumento = facturaDto.NumeroDocumento,
+                FechaEmision = facturaDto.FechaEmision,
+                MontoTotal = facturaDto.MontoTotal,
+                Estado = facturaDto.Estado,
+                IdReserva = facturaDto.IdReserva,
+                IdCliente = facturaDto.IdCliente
+            };
 
-        return Ok(facturas);
-    }
+            _context.Facturas.Add(factura);
+            await _context.SaveChangesAsync();
 
-    // GET: api/Factura/{id}
-    [HttpGet("{id}")]
-    public async Task<ActionResult<FacturaDTO>> GetFactura(int id)
-    {
-        var factura = await _context.Facturas.FindAsync(id);
-        if (factura == null)
-            return NotFound();
+            // Agregar detalles de factura si existen
+            if (facturaDto.Detalles != null && facturaDto.Detalles.Any())
+            {
+                foreach (var detalleDto in facturaDto.Detalles)
+                {
+                    var detalle = new Detallefactura
+                    {
+                        PrecioServicio = detalleDto.PrecioServicio,
+                        CantidadServicio = detalleDto.CantidadServicio,
+                        Subtotal = detalleDto.Subtotal,
+                        IdFactura = factura.IdFactura,
+                        IdServicioReserva = detalleDto.IdServicioReserva
+                    };
 
-        var facturaDTO = new FacturaDTO
+                    _context.Detallefacturas.Add(detalle);
+                }
+
+                await _context.SaveChangesAsync();
+            }
+
+            facturaDto.IdFactura = factura.IdFactura;
+
+            return CreatedAtAction(nameof(GetFactura), new { id = factura.IdFactura }, facturaDto);
+        }
+
+        // GET: api/Factura/{id}
+        [HttpGet("{id}")]
+        public async Task<ActionResult<FacturaDTO>> GetFactura(int id)
         {
-            IdFactura = factura.IdFactura,
-            NumeroDocumento = factura.NumeroDocumento,
-            FechaEmision = factura.FechaEmision,
-            MontoTotal = factura.MontoTotal,
-            Estado = factura.Estado,
-            IdReserva = factura.IdReserva
-        };
+            var factura = await _context.Facturas
+                .Include(f => f.Detallefacturas)
+                .FirstOrDefaultAsync(f => f.IdFactura == id);
 
-        return Ok(facturaDTO);
-    }
+            if (factura == null)
+                return NotFound();
 
-    // POST: api/Factura
-    [HttpPost]
-    public async Task<ActionResult<FacturaDTO>> PostFactura(FacturaDTO facturaDTO)
-    {
-        var factura = new Factura
+            var facturaDto = new FacturaDTO
+            {
+                IdFactura = factura.IdFactura,
+                NumeroDocumento = factura.NumeroDocumento,
+                FechaEmision = factura.FechaEmision,
+                MontoTotal = factura.MontoTotal,
+                Estado = factura.Estado,
+                IdReserva = factura.IdReserva,
+                IdCliente = factura.IdCliente,
+                Detalles = factura.Detallefacturas.Select(d => new DetalleFacturaDTO
+                {
+                    IdDetalleFactura = d.IdDetalleFactura,
+                    PrecioServicio = d.PrecioServicio,
+                    CantidadServicio = d.CantidadServicio,
+                    Subtotal = d.Subtotal,
+                    IdFactura = d.IdFactura,
+                    IdServicioReserva = d.IdServicioReserva
+                }).ToList()
+            };
+
+            return Ok(facturaDto);
+        }
+
+        // PUT: api/Factura/{id}
+        [HttpPut("{id}")]
+        public async Task<IActionResult> ActualizarFactura(int id, [FromBody] FacturaDTO facturaDto)
         {
-            NumeroDocumento = facturaDTO.NumeroDocumento,
-            FechaEmision = facturaDTO.FechaEmision,
-            MontoTotal = facturaDTO.MontoTotal,
-            Estado = facturaDTO.Estado,
-            IdReserva = facturaDTO.IdReserva
-        };
+            if (id != facturaDto.IdFactura)
+                return BadRequest();
 
-        _context.Facturas.Add(factura);
-        await _context.SaveChangesAsync();
+            var factura = await _context.Facturas.FindAsync(id);
+            if (factura == null)
+                return NotFound();
 
-        facturaDTO.IdFactura = factura.IdFactura;
+            factura.NumeroDocumento = facturaDto.NumeroDocumento;
+            factura.FechaEmision = facturaDto.FechaEmision;
+            factura.MontoTotal = facturaDto.MontoTotal;
+            factura.Estado = facturaDto.Estado;
+            factura.IdReserva = facturaDto.IdReserva;
+            factura.IdCliente = facturaDto.IdCliente;
 
-        return CreatedAtAction(nameof(GetFactura), new { id = factura.IdFactura }, facturaDTO);
-    }
+            _context.Entry(factura).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-    // PUT: api/Factura/{id}
-    [HttpPut("{id}")]
-    public async Task<IActionResult> PutFactura(int id, FacturaDTO facturaDTO)
-    {
-        if (id != facturaDTO.IdFactura)
-            return BadRequest();
+            // Actualizar detalles de factura si es necesario
+            // Aquí podrías agregar lógica para actualizar los detalles asociados
 
-        var factura = await _context.Facturas.FindAsync(id);
-        if (factura == null)
-            return NotFound();
-
-        factura.NumeroDocumento = facturaDTO.NumeroDocumento;
-        factura.FechaEmision = facturaDTO.FechaEmision;
-        factura.MontoTotal = facturaDTO.MontoTotal;
-        factura.Estado = facturaDTO.Estado;
-        factura.IdReserva = facturaDTO.IdReserva;
-
-        _context.Entry(factura).State = EntityState.Modified;
-        await _context.SaveChangesAsync();
-
-        return NoContent();
-    }
-
-    // DELETE: api/Factura/{id}
-    [HttpDelete("{id}")]
-    public async Task<IActionResult> DeleteFactura(int id)
-    {
-        var factura = await _context.Facturas.FindAsync(id);
-        if (factura == null)
-            return NotFound();
-
-        _context.Facturas.Remove(factura);
-        await _context.SaveChangesAsync();
-
-        return NoContent();
+            return NoContent();
+        }
     }
 }

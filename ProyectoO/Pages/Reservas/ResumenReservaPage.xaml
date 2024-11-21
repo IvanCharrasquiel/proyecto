@@ -3,15 +3,20 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProyectoO.Pages.Reservas.ResumenReservaPage"
              Title="Resumen de Reserva">
+    <!-- ResumenReservaPage.xaml -->
     <ScrollView>
         <StackLayout Padding="20" Spacing="15">
             <Label Text="Resumen de tu Reserva" FontAttributes="Bold" FontSize="Large" HorizontalOptions="Center" />
 
+            <!-- Información del Empleado -->
+            <Label Text="Empleado:" FontAttributes="Bold" />
+            <Label Text="{Binding Empleado.Persona.NombreCompleto}" />
+
             <!-- Fecha y Hora -->
             <Label Text="Fecha y Hora:" FontAttributes="Bold" />
             <Label Text="{Binding FechaSeleccionada, StringFormat='Fecha: {0:dd/MM/yyyy}'}" />
-            <Label Text="{Binding HorarioSeleccionado.HoraInicio, StringFormat='Hora: {0:hh\\:mm}'}" />
-            <Label Text="{Binding HorarioSeleccionado.HoraFin, StringFormat='Hora: {0:hh\\:mm}'}" />
+            <Label Text="{Binding HorarioSeleccionado.HoraInicio, StringFormat='Hora Inicio: {0:hh\\:mm}'}" />
+            <Label Text="{Binding HoraFin, StringFormat='Hora Fin: {0:hh\\:mm}'}" />
 
             <!-- Servicios -->
             <Label Text="Servicios Seleccionados:" FontAttributes="Bold" />
@@ -34,4 +39,5 @@
             <Button Text="Confirmar Reserva" Command="{Binding ConfirmarReservaCommand}" BackgroundColor="Green" TextColor="White" />
         </StackLayout>
     </ScrollView>
+
 </ContentPage>

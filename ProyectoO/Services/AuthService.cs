@@ -18,22 +18,23 @@ namespace ProyectoO.Services
 
         public async Task<LoginResponseDTO> LoginAsync(string email, string contraseña)
         {
-            var loginData = new LoginDTO
-            {
-                Email = email.Trim(),
-                Contraseña = contraseña.Trim()
-            };
+            var loginRequest = new LoginDTO { Email = email, Contraseña = contraseña };
+            var response = await _apiService.PostAsync<LoginDTO, LoginResponseDTO>("api/Auth/Login", loginRequest);
 
-            try
+            if (response != null && !string.IsNullOrEmpty(response.Token))
             {
-                var response = await _apiService.PostAsync<LoginDTO, LoginResponseDTO>("api/Auth/Login", loginData);
+                // Guardar el token en SecureStorage
+                await SecureStorage.SetAsync("AuthToken", response.Token);
+
+                // Establecer el token en el ApiService
+                _apiService.SetAuthorizationHeader(response.Token);
+
                 return response;
             }
-            catch (Exception ex)
-            {
-                throw new Exception($"Error al iniciar sesión: {ex.Message}");
-            }
+
+            throw new Exception("Credenciales inválidas.");
         }
+
 
         public async Task RegisterAsync(RegistroRequestDTO registroRequest)
         {

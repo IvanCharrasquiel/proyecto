@@ -2,6 +2,7 @@ using APIProyecto.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.IdentityModel.Tokens;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -63,9 +64,23 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             ValidAudience = builder.Configuration["Jwt:Audience"],
             IssuerSigningKey = new SymmetricSecurityKey(key)
         };
+
+        options.Events = new JwtBearerEvents
+        {
+            OnTokenValidated = context =>
+            {
+                var claimsIdentity = context.Principal.Identity as ClaimsIdentity;
+
+                // Agregar un claim personalizado
+                claimsIdentity.AddClaim(new Claim("CustomClaim", "ValorPersonalizado"));
+
+                return Task.CompletedTask;
+            }
+        };
     });
 
-builder.Services.AddAuthorization();
+
+
 
 var app = builder.Build();
 

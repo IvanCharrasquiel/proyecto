@@ -48,6 +48,7 @@ namespace ProyectoO.Pages.InicioSesion
                     {
                         // Almacenar el rol del usuario
                         UserService.Instance.CurrentRole = loginResponse.Role;
+                        UserService.Instance.CurrentIdUser = loginResponse.Id;
 
                         // Obtener los datos de la Persona usando IdPersona
                         var persona = await _personaService.GetPersonaByIdAsync(loginResponse.IdPersona);

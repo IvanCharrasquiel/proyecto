@@ -14,7 +14,7 @@ namespace ProyectoO.ViewModels
     public class SeleccionarHorarioViewModel : INotifyPropertyChanged
     {
         private readonly ApiService _apiService;
-        private readonly int _empleadoId;
+        private readonly EmpleadoDTO _empleado;
         private readonly DateTime _fechaSeleccionada;
         private readonly AuthService _authService;
 
@@ -39,17 +39,17 @@ namespace ProyectoO.ViewModels
 
         public ICommand ContinuarCommand { get; }
 
-        public SeleccionarHorarioViewModel(DateTime fechaSeleccionada, int empleadoId, ApiService apiService, int servicioPreSeleccionadoId, AuthService authService)
+        public SeleccionarHorarioViewModel(DateTime fechaSeleccionada, EmpleadoDTO empleado, ApiService apiService, int servicioPreSeleccionadoId, AuthService authService)
         {
             _fechaSeleccionada = fechaSeleccionada;
-            _empleadoId = empleadoId;
+            _empleado = empleado;
             _apiService = apiService;
             _authService = authService;
 
             HorariosDisponibles = new ObservableCollection<HorarioDisponibleDTO>();
             ContinuarCommand = new Command(() =>
             {
-                var seleccionarServiciosPage = new SeleccionarServiciosPage(_fechaSeleccionada, _empleadoId, _apiService, HorarioSeleccionado, servicioPreSeleccionadoId, _authService);
+                var seleccionarServiciosPage = new SeleccionarServiciosPage(_fechaSeleccionada, _empleado, _apiService, HorarioSeleccionado, servicioPreSeleccionadoId, _authService);
                 Application.Current.MainPage.Navigation.PushAsync(seleccionarServiciosPage);
             });
 
@@ -61,7 +61,7 @@ namespace ProyectoO.ViewModels
             try
             {
                 var horarios = await _apiService.GetAsync<List<HorarioDisponibleDTO>>(
-                    $"api/Horario/Disponibilidad?idEmpleado={_empleadoId}&fecha={_fechaSeleccionada:yyyy-MM-dd}");
+                    $"api/Horario/Disponibilidad?idEmpleado={_empleado.IdEmpleado}&fecha={_fechaSeleccionada:yyyy-MM-dd}");
 
                 HorariosDisponibles.Clear();
                 foreach (var horario in horarios)

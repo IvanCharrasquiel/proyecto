@@ -1,7 +1,5 @@
-﻿using System;
-using System.Collections.Generic;
-
-namespace APIProyecto.Models;
+﻿using APIProyecto.Models;
+using System.ComponentModel.DataAnnotations.Schema;
 
 public partial class Factura
 {
@@ -13,14 +11,16 @@ public partial class Factura
 
     public decimal? MontoTotal { get; set; }
 
-    public string? Estado { get; set; }
+    public string Estado { get; set; }
 
     public int IdReserva { get; set; }
-    public int? IdCliente { get; set; } 
+
+    public int IdCliente { get; set; }
 
     public virtual ICollection<Detallefactura> Detallefacturas { get; set; } = new List<Detallefactura>();
 
-    public virtual Cliente? Cliente { get; set; } 
+    [ForeignKey(nameof(IdCliente))]
+    public virtual Cliente Cliente { get; set; } = null!;
 
     public virtual Reserva IdReservaNavigation { get; set; } = null!;
 

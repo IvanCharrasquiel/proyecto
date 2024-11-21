@@ -2,7 +2,7 @@
 using System;
 using System.Collections.Generic;
 
-namespace APIProyecto.DTO
+namespace ProyectoO.DTO
 {
     public class FacturaDTO
     {

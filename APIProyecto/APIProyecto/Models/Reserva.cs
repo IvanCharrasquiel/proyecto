@@ -7,11 +7,11 @@ namespace APIProyecto.Models
     {
         public int IdReserva { get; set; }
 
-        public DateTime Fecha { get; set; } // Eliminado '?'
+        public DateTime Fecha { get; set; } 
 
-        public TimeSpan HoraInicio { get; set; } // Eliminado '?'
+        public TimeSpan HoraInicio { get; set; } 
 
-        public TimeSpan HoraFin { get; set; } // Eliminado '?'
+        public TimeSpan HoraFin { get; set; }
 
         public int IdCliente { get; set; }
 

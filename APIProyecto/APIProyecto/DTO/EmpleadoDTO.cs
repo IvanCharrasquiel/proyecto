@@ -9,11 +9,11 @@ namespace APIProyecto.DTO
 
         public DateTime? FechaContrato { get; set; }
 
-        public decimal? Comision { get; set; }
+        public decimal Comision { get; set; }
 
         public int IdPersona { get; set; }
 
-        public int? IdCargo { get; set; }
+        public int IdCargo { get; set; }
 
 
         public PersonaDTO Persona { get; set; }

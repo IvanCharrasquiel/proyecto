@@ -13,7 +13,7 @@ namespace ProyectoO
 
         public App()
         {
-            var UrlAPI = "https://0f72-190-217-65-139.ngrok-free.app";
+            var UrlAPI = "https://0fbe-190-217-65-139.ngrok-free.app";
             InitializeComponent();
 
             // Configurar los servicios

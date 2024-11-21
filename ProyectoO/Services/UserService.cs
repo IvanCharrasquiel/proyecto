@@ -19,6 +19,7 @@ namespace ProyectoO.Services
         // Propiedades para el usuario actual
         public PersonaDTO CurrentUser { get; set; }
         public string CurrentRole { get; set; }
+        public int CurrentIdUser { get; set; }
 
         private UserService() { }
     }

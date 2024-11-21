@@ -6,7 +6,7 @@ namespace APIProyecto.DTO
     public class EmpleadoRegistroDTO
     {
         [Range(0, 100, ErrorMessage = "La comisión debe estar entre 0 y 100.")]
-        public decimal? Comision { get; set; }
+        public decimal Comision { get; set; }
         public int IdCargo { get; set; }
 
         [Required]
