@@ -17,7 +17,7 @@ namespace APIProyecto.Models
 
         public int IdEmpleado { get; set; }
 
-        public string EstadoReserva { get; set; } = "Pendiente";
+        public string EstadoReserva { get; set; } = "Confirmada";
 
         public virtual ICollection<Factura> Facturas { get; set; } = new List<Factura>();
 

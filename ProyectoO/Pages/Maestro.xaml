@@ -44,6 +44,8 @@
                         Padding="10,0,0,0"
                         Clicked="OnHomeClicked"/>
             </Grid>
+            
+            
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -61,7 +63,8 @@
                         Clicked="OnVerPerfilClicked"/>
             </Grid>
             
-            <!-- Mis reservas -->
+            
+            <!-- Mis reservas --><!--
             <Grid>
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="Auto"/>
@@ -77,7 +80,7 @@
                         HorizontalOptions="FillAndExpand"
                         Padding="10,0,0,0"
                         Clicked="OnMisReservasClicked"/>
-            </Grid>
+            </Grid>-->
             <!-- Nueva opción: Reprogramar Reserva -->
             <!--<Grid>
                 <Grid.ColumnDefinitions>
@@ -133,10 +136,6 @@
             </Grid>
 
             
-
-            <!-- Ver Perfil -->
-            
-
             <!-- Cerrar Sesión -->
             <Grid>
                 <Grid.ColumnDefinitions>

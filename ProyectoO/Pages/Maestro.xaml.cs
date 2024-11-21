@@ -51,12 +51,6 @@ namespace ProyectoO.Pages
             OcultarDetalles();
         }
 
-        private async void OnMisReservasClicked(object sender, EventArgs e)
-        {
-            // Navegar a la página de Mis Reservas
-            await App.FlyoutPage.Detail.Navigation.PushAsync(new PaginaReservas(_personaService));
-            OcultarDetalles();
-        }
         
         private async void OnServicesClicked(object sender, EventArgs e)
         {

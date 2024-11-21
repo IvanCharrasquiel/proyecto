@@ -16,11 +16,11 @@ public partial class Factura
     public string? Estado { get; set; }
 
     public int IdReserva { get; set; }
-    public int? IdCliente { get; set; }  // Nueva clave foránea opcional
+    public int? IdCliente { get; set; } 
 
     public virtual ICollection<Detallefactura> Detallefacturas { get; set; } = new List<Detallefactura>();
 
-    public virtual Cliente? Cliente { get; set; }  // Propiedad de navegación hacia Cliente
+    public virtual Cliente? Cliente { get; set; } 
 
     public virtual Reserva IdReservaNavigation { get; set; } = null!;
 

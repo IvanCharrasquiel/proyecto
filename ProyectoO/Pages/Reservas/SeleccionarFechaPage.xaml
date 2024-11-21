@@ -9,5 +9,20 @@
         <Button Text="Siguiente"
                 Command="{Binding ContinuarCommand}"
                 IsEnabled="{Binding PuedeContinuar}" />
+
+        <Label Text="Selecciona un Horario:" FontAttributes="Bold" />
+        <CollectionView ItemsSource="{Binding HorariosDisponibles}" SelectionMode="Single"
+                SelectedItem="{Binding HorarioSeleccionado}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame BorderColor="LightGray" Padding="10" Margin="5" InputTransparent="True">
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding HoraInicio, StringFormat='{0:hh\\:mm}'}" VerticalOptions="Center" />
+                            <Label Text="{Binding HoraFin, StringFormat=' - {0:hh\\:mm}'}" VerticalOptions="Center" />
+                        </StackLayout>
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
     </StackLayout>
 </ContentPage>

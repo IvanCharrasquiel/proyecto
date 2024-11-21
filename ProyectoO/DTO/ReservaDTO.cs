@@ -1,4 +1,5 @@
 ﻿using Newtonsoft.Json;
+using ProyectoO.DTO;
 
 public class ReservaDTO
 {
@@ -23,5 +24,5 @@ public class ReservaDTO
     [JsonProperty("EstadoReserva")]
     public string EstadoReserva { get; set; } = "Pendiente";
 
-    public List<int> Servicios { get; set; }
+    public List<ReservaServicioDTO> Servicios { get; set; }
 }

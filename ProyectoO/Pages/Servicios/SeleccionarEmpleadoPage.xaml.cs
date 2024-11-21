@@ -8,6 +8,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using ProyectoO.Services;
 
 namespace ProyectoO.Pages.Servicios
 {
@@ -16,13 +17,13 @@ namespace ProyectoO.Pages.Servicios
         private readonly IAuthService _authService;
         private readonly IPersonaService _personaService;
         private readonly ApiService _apiService;
+        private readonly AuthService _auth;
         private readonly ServicioDTO _servicio;
         private List<EmpleadoDTO> _empleadosDisponibles;
 
         public SeleccionarEmpleadoPage(IAuthService authService, IPersonaService personaService, ServicioDTO servicio)
         {
             InitializeComponent();
-
             _authService = authService;
             _personaService = personaService;
             _apiService = new ApiService(_personaService.BaseUrl);
@@ -66,7 +67,7 @@ namespace ProyectoO.Pages.Servicios
             var empleado = e.CurrentSelection.FirstOrDefault() as EmpleadoDTO;
             if (empleado != null)
             {
-                NavigationToPage(new CrearReservaPage(_apiService, empleado.IdEmpleado));
+                NavigationToPage(new SeleccionarFechaPage(empleado.IdEmpleado, _apiService, _servicio.IdServicio, _auth));
                 CollectionViewEmpleados.SelectedItem = null; // Deseleccionar
             }
         }

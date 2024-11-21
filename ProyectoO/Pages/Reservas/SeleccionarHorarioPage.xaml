@@ -1,20 +1,23 @@
+<?xml version="1.0" encoding="utf-8" ?>
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="ProyectoO.Pages.Reservas.SeleccionarHorarioPage"
-            >
+             Title="Seleccionar Horario">
     <StackLayout Padding="20" Spacing="15">
-        <Label Text="Horarios Disponibles:" FontAttributes="Bold" />
+        <Label Text="Selecciona un Horario:" FontAttributes="Bold" />
         <CollectionView ItemsSource="{Binding HorariosDisponibles}" SelectionMode="Single"
                         SelectedItem="{Binding HorarioSeleccionado}">
             <CollectionView.ItemTemplate>
                 <DataTemplate>
                     <Frame BorderColor="LightGray" Padding="10" Margin="5">
-                        <Label Text="{Binding HoraInicio, StringFormat='{0:hh\\:mm}'}" />
+                        <StackLayout Orientation="Horizontal">
+                            <Label Text="{Binding HoraInicio, StringFormat='{0:hh\\:mm}'}" VerticalOptions="Center" />
+                            <Label Text="{Binding HoraFin, StringFormat=' - {0:hh\\:mm}'}" VerticalOptions="Center" />
+                        </StackLayout>
                     </Frame>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>
-
         <Button Text="Siguiente"
                 Command="{Binding ContinuarCommand}"
                 IsEnabled="{Binding PuedeContinuar}" />
