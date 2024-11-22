@@ -26,53 +26,90 @@ namespace APIProyecto.Controllers
             if (!ModelState.IsValid)
                 return BadRequest(ModelState);
 
-            // Verificar si el cliente existe en la base de datos
-            var cliente = await _context.Clientes
-                .Include(c => c.IdPersonaNavigation)
-                .FirstOrDefaultAsync(c => c.IdCliente == reservaDto.IdCliente);
-
-            if (cliente == null)
-                return NotFound(new { Message = "Cliente no encontrado." });
-
-            // Validar disponibilidad del empleado en el horario seleccionado
-            var reservasExistentes = await _context.Reservas
-                .Where(r => r.IdEmpleado == reservaDto.IdEmpleado && r.Fecha == reservaDto.Fecha)
-                .ToListAsync();
-
-            bool hayConflicto = reservasExistentes.Any(r =>
-                (reservaDto.HoraInicio >= r.HoraInicio && reservaDto.HoraInicio < r.HoraFin) ||
-                (reservaDto.HoraFin > r.HoraInicio && reservaDto.HoraFin <= r.HoraFin));
-
-            if (hayConflicto)
-                return BadRequest(new { Message = "El horario seleccionado no está disponible." });
-
-            
-            // Crear la reserva
-            var reserva = new Reserva
+            using (var transaction = await _context.Database.BeginTransactionAsync())
             {
-                Fecha = reservaDto.Fecha,
-                HoraInicio = reservaDto.HoraInicio,
-                HoraFin = reservaDto.HoraFin,
-                IdCliente = reservaDto.IdCliente,
-                IdEmpleado = reservaDto.IdEmpleado,
-                EstadoReserva = "Pendiente"
-            };
-
-            _context.Reservas.Add(reserva);
-            await _context.SaveChangesAsync();
-
-            // Asociar servicios a la reserva
-            foreach (var idServicio in reservaDto.IdServicios)
-            {
-                _context.Servicioreservas.Add(new Servicioreserva
+                try
                 {
-                    IdReserva = reserva.IdReserva,
-                    IdServicio = idServicio
-                });
-                await _context.SaveChangesAsync();
-            }
+                    // Verificar si el cliente existe en la base de datos
+                    var cliente = await _context.Clientes
+                        .Include(c => c.IdPersonaNavigation)
+                        .FirstOrDefaultAsync(c => c.IdCliente == reservaDto.IdCliente);
 
-            return Ok(new { Message = "Reserva creada exitosamente." });
+                    if (cliente == null)
+                        return NotFound(new { Message = "Cliente no encontrado." });
+
+                    // Validar disponibilidad del empleado en el horario seleccionado
+                    var reservasExistentes = await _context.Reservas
+                        .Where(r => r.IdEmpleado == reservaDto.IdEmpleado && r.Fecha == reservaDto.Fecha)
+                        .ToListAsync();
+
+                    bool hayConflicto = reservasExistentes.Any(r =>
+                        reservaDto.HoraInicio < r.HoraFin && reservaDto.HoraFin > r.HoraInicio);
+
+                    if (hayConflicto)
+                        return BadRequest(new { Message = "El horario seleccionado no está disponible." });
+
+                    // Verificar que los servicios existen
+                    var serviciosValidos = await _context.Servicios
+                        .Where(s => reservaDto.IdServicios.Contains(s.IdServicio))
+                        .Select(s => s.IdServicio)
+                        .ToListAsync();
+
+                    if (serviciosValidos.Count != reservaDto.IdServicios.Count)
+                        return BadRequest(new { Message = "Uno o más servicios no son válidos." });
+
+                    // Crear la reserva
+                    var reserva = new Reserva
+                    {
+                        Fecha = reservaDto.Fecha,
+                        HoraInicio = reservaDto.HoraInicio,
+                        HoraFin = reservaDto.HoraFin,
+                        IdCliente = reservaDto.IdCliente,
+                        IdEmpleado = reservaDto.IdEmpleado,
+                        EstadoReserva = "Pendiente"
+                    };
+
+                    _context.Reservas.Add(reserva);
+                    await _context.SaveChangesAsync();
+
+                    // Asociar servicios a la reserva
+                    foreach (var idServicio in serviciosValidos)
+                    {
+                        _context.Servicioreservas.Add(new Servicioreserva
+                        {
+                            IdReserva = reserva.IdReserva,
+                            IdServicio = idServicio
+                        });
+                    }
+
+                    await _context.SaveChangesAsync();
+
+                    // Revalidar conflictos antes de confirmar la transacción
+                    reservasExistentes = await _context.Reservas
+                        .Where(r => r.IdEmpleado == reservaDto.IdEmpleado && r.Fecha == reservaDto.Fecha)
+                        .ToListAsync();
+
+                    hayConflicto = reservasExistentes.Any(r =>
+                        reserva.IdReserva != r.IdReserva && // Excluir la reserva actual
+                        reservaDto.HoraInicio < r.HoraFin && reservaDto.HoraFin > r.HoraInicio);
+
+                    if (hayConflicto)
+                    {
+                        await transaction.RollbackAsync();
+                        return BadRequest(new { Message = "El horario seleccionado no está disponible (conflicto detectado al guardar)." });
+                    }
+
+                    // Confirmar la transacción
+                    await transaction.CommitAsync();
+
+                    return Ok(new { Message = "Reserva creada exitosamente." });
+                }
+                catch (Exception ex)
+                {
+                    await transaction.RollbackAsync();
+                    return StatusCode(500, new { Message = "Ocurrió un error al crear la reserva.", Details = ex.Message });
+                }
+            }
         }
 
 

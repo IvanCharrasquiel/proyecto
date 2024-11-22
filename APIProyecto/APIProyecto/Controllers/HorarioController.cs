@@ -41,8 +41,6 @@ namespace APIProyecto.Controllers
                 .Include(eh => eh.IdHorarioNavigation)
                 .ToListAsync();
 
-            
-
             if (horariosAsignados == null || horariosAsignados.Count == 0)
             {
                 return NotFound("No hay horarios asignados para este empleado en la fecha seleccionada.");
@@ -51,6 +49,11 @@ namespace APIProyecto.Controllers
             // Obtener todas las reservas para el empleado en la fecha
             var reservas = await _context.Reservas
                 .Where(r => r.IdEmpleado == idEmpleado && r.Fecha.Date == fecha.Date)
+                .Select(r => new
+                {
+                    HoraInicio = new TimeSpan(r.HoraInicio.Hours, r.HoraInicio.Minutes, 0),
+                    HoraFin = new TimeSpan(r.HoraFin.Hours, r.HoraFin.Minutes, 0)
+                })
                 .ToListAsync();
 
             var horariosDisponibles = new List<HorarioDisponibleDTO>();
@@ -58,8 +61,8 @@ namespace APIProyecto.Controllers
             // Generar bloques disponibles considerando la duración total
             foreach (var horario in horariosAsignados)
             {
-                var horaInicio = horario.IdHorarioNavigation.HoraInicio;
-                var horaFin = horario.IdHorarioNavigation.HoraFin;
+                var horaInicio = new TimeSpan(horario.IdHorarioNavigation.HoraInicio.Hours, horario.IdHorarioNavigation.HoraInicio.Minutes, 0);
+                var horaFin = new TimeSpan(horario.IdHorarioNavigation.HoraFin.Hours, horario.IdHorarioNavigation.HoraFin.Minutes, 0);
 
                 var bloquesHorario = GenerarBloquesHorario(horaInicio, horaFin, duracionTotal);
 
@@ -86,7 +89,7 @@ namespace APIProyecto.Controllers
                 return NotFound("No hay horarios disponibles para este empleado en la fecha seleccionada que puedan acomodar la duración requerida.");
             }
 
-            return Ok(horariosDisponibles);
+            return Ok(horariosDisponibles.OrderBy(h => h.HoraInicio));
         }
 
         // Método auxiliar para generar bloques considerando la duración total
@@ -110,6 +113,8 @@ namespace APIProyecto.Controllers
             return bloques;
         }
 
+        // Método auxiliar para generar bloques considerando la duración total
+        
         [HttpGet("HorariosAsignados")]
         public async Task<ActionResult<IEnumerable<EmpleadoHorarioDTO>>> GetHorariosAsignados(int idEmpleado, DateTime fecha)
         {
